@@ -69,10 +69,10 @@
 NoSQL常见的四种类型：键值对型、文档型、列式存储型和图型。
 
 #### Redis
-**定义：** Redis是一种采用内存来作为数据结构存储的数据库、缓存和消息代理。
-**部署说明：** Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如Linux，* BSD，OS X，而无需外部依赖。Linux和OS X是Redis开发和测试最多的两个操作系统，我们建议使用Linux进行部署。
-**支持的数据结构：** 字符串，哈希，列表，集合，带范围查询的排序集合，位图，HyperLogLog，地理空间索引。
-**集群模式：**
+**定义：** Redis是一种采用内存来作为数据结构存储的数据库、缓存和消息代理。<br/>
+**部署说明：** Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如Linux，* BSD，OS X，而无需外部依赖。Linux和OS X是Redis开发和测试最多的两个操作系统，我们建议使用Linux进行部署。<br/>
+**支持的数据结构：** 字符串，哈希，列表，集合，带范围查询的排序集合，位图，HyperLogLog，地理空间索引。<br/>
+**集群模式：**<br/>
 Redis官方提供的高可用方案分为Redis Sentinel和Redis Cluster两种。
 
 Redis Sentinel
