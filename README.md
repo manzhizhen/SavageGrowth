@@ -157,6 +157,10 @@ Redis Sentinel<br/>
 ## < IO >
 ### 零拷贝
 
+**参考资料：**
+https://developer.ibm.com/articles/j-zerocopy/
+https://www.linuxjournal.com/article/6345
+
 ### 伪共享
 
 
