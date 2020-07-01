@@ -131,7 +131,10 @@ Redis Sentinel<br/>
 
 ## <基础框架>
 ### Spring
-最核心的接口是BeanFactory，
+Spring中最核心的接口是BeanFactory，它是我们访问Spring Bean容器的根接口，里面定义了很多通过名字或类型来获取Bean的方法。<br />
+Spring中另一个核心接口是ApplicationContext
+
+
 
 ## <常见工具>
 ### Arthas
