@@ -141,8 +141,14 @@ Redis Sentinel<br/>
 
 ## <基础框架>
 ### Spring
-Spring中最核心的接口是BeanFactory，它是我们访问Spring Bean容器的根接口，里面定义了很多通过名字或类型来获取Bean的方法。<br />
-Spring中另一个核心接口是ApplicationContext
+Spring中最核心的接口是BeanFactory，它是我们访问Spring Bean容器的根接口，里面定义了很多通过名字或类型来获取Bean的方法，BeanFactory提供了一种高级配置机制，能够管理任何类型的对象。<br />
+Spring中另一个核心接口是ApplicationContext，它是BeanFactory的子接口，它提供了如下功能：
+1. 与Spring的AOP功能轻松集成
+2. 消息资源处理（用于国际化）
+3. 事件发布
+4. 应用层特定的上下文，例如WebApplicationContext用于Web应用程序中的。
+
+简而言之，BeanFactory提供了配置框架和基本功能，并ApplicationContext增加了更多针对企业的功能。
 
 
 
