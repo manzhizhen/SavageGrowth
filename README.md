@@ -150,10 +150,10 @@ Spring中另一个核心接口是ApplicationContext，它是BeanFactory的子接
 
 简而言之，BeanFactory提供了配置框架和基本功能，并ApplicationContext增加了更多针对企业的功能。
 
-### IoC
+#### IoC
 org.springframework.beans和org.springframework.context包是Spring框架的IoC容器的基础。
 
-### AOP
+#### AOP
 Spring通过使用基于Schema的方法或@AspectJ注释样式，提供了编写自定义方面的简单而强大的方式。
 
 ## <常见工具>
