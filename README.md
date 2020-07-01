@@ -130,6 +130,8 @@ Redis Sentinel<br/>
 
 
 ## <基础框架>
+### Spring
+最核心的接口是BeanFactory，
 
 ## <常见工具>
 ### Arthas
