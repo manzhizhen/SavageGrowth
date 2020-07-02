@@ -165,8 +165,6 @@ AOP代理(AOP proxy)：由AOP框架创建的一个对象，用于实现切面合
 
 Spring AOP并未想和AspectJ竞争以提供全面的AOP解决方案，而是和Spring IoC和AspectJ结合，Spring AOP默认将标准JDK动态代理用于AOP代理。这使得可以代理任何接口（或一组接口）。Spring AOP也可以使用CGLIB代理。这对于代理类而不是接口是必需的。默认情况下，如果业务对象未实现接口，则使用CGLIB。
 
-启动@AspectJ有XML配置和注解两种方式
-
 ## <常见工具>
 ### Arthas
 
