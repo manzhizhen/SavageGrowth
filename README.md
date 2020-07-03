@@ -77,6 +77,7 @@ https://spring.io/serverless
 
 #### MySQL
 **MGR**<br />
+即MySQL Group Replication
 
 ### NoSQL
 NoSQL常见的四种类型：键值对型、文档型、列式存储型和图型。
