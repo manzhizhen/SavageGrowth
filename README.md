@@ -75,6 +75,9 @@ https://spring.io/serverless
 
 ### RDS
 
+#### MySQL
+**MGR**<br />
+
 ### NoSQL
 NoSQL常见的四种类型：键值对型、文档型、列式存储型和图型。
 
