@@ -86,8 +86,8 @@ MySQL异步复制：MySQL提供了两种异步复制机制，一种是“异步�
 ![avatar](imgs/MySQL异步复制.png)<br />
 另一种是“半同步复制”，即主执行事务，在等待从服务器确认已接收到事务后再提交事务。<br />
 ![avatar](imgs/MySQL半同步复制.png)<br />
-MGR:
-![avatar](imgs/MGR.png)<br />
+MGR:<br />
+![](imgs/MGR.png) <br />
 
 **binlog、redolog、undolog**<br />
 binlog：MySQL Server层记录的归档日志，Base64编码的二进制格式，用于恢复数据和复本同步。binlog采用的是顺序追加写。<br />
