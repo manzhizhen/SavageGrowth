@@ -151,7 +151,7 @@ Redis Sentinel<br/>
 
 
 
-**扩展知识点：** HyperLogLog
+**扩展知识点：** HyperLogLog<br />
 **参考资料：** 
 * https://redis.io/
 * http://doc.redisfans.com/
