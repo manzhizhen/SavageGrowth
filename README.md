@@ -83,7 +83,7 @@ MGR为分布式状态机复制提供了服务器之间的强大协调能力，�
 
 **经典MySQL异步复制和MGR之间的区别**
 MySQL异步复制：MySQL提供了两种异步复制机制，一种是“异步复制”，即主执行事务，提交事务，然后将它们稍后（因此异步）发送到从副本以重新执行（在基于语句的复制中）或应用（在基于行的复制中）.<br />
-![avatar](imgs/MySQL异步复制.png)<br />
+![avatar](https://github.com/manzhizhen/SavageGrowth/blob/master/imgs/MySQL%E5%BC%82%E6%AD%A5%E5%A4%8D%E5%88%B6.png)<br />
 另一种是“半同步复制”，即主执行事务，在等待从服务器确认已接收到事务后再提交事务。<br />
 ![avatar](imgs/MySQL半同步复制.png)<br />
 MGR:<br />
