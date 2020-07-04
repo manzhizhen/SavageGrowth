@@ -89,9 +89,11 @@ MySQL异步复制：MySQL提供了两种异步复制机制，一种是“异步�
 MGR:
 
 **binlog、redolog、undolog**<br />
+**binlog** ：MySQL Server层记录的日志，Base64编码的二进制格式，用户恢复数据和复本同步。
 
 **参考资料：**<br />
-https://dev.mysql.com/doc/refman/8.0/en/group-replication.html
+* https://dev.mysql.com/doc/refman/8.0/en/group-replication.html
+* https://dev.mysql.com/doc/refman/8.0/en/binlog.html
 
 ### NoSQL
 NoSQL常见的四种类型：键值对型、文档型、列式存储型和图型。
