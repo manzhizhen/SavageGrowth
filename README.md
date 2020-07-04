@@ -89,7 +89,9 @@ MySQL异步复制：MySQL提供了两种异步复制机制，一种是“异步�
 MGR:
 
 **binlog、redolog、undolog**<br />
-**binlog** ：MySQL Server层记录的日志，Base64编码的二进制格式，用户恢复数据和复本同步。
+binlog：MySQL Server层记录的归档日志，Base64编码的二进制格式，用于恢复数据和复本同步。binlog采用的是顺序追加写。<br />
+redolog：InnoDB存储引擎层的重做日志，确保事务的持久性。防止在发生故障的时间点，尚有脏页未写入磁盘，在重启MySQL服务的时候，根据redolog进行重做，从而保证事务的持久性。redolog采用的是循环写，即固定文件大小，如果写到文件末尾，又从头写。<br />
+undolog：InnoDB存储引擎层的回滚日志，保存了事务发生之前的数据的一个版本，用于事务的回滚。<br />
 
 **参考资料：**<br />
 * https://dev.mysql.com/doc/refman/8.0/en/group-replication.html
