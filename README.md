@@ -242,21 +242,33 @@ ThreadLocal中使用了
 **Java线程5大状态**
 ![Java线程状态](https://user-images.githubusercontent.com/6687462/86524741-dbd65600-beb0-11ea-8d52-27dc94f294e5.png)
 
+**内存屏障**
+![内存屏障](https://user-images.githubusercontent.com/6687462/86533378-47491380-bf03-11ea-98e0-67837ecf2a5f.png)
+
 **volatile**
 volatile是轻量级的synchronized，它在多处理器开发中保证了共享变量的“可见性”，它比synchronized的使用和执行成本更低，因为它不会引起线程上下文的切换和调度。<br />
-volatile实现原理：1. Lock前缀指令会引起处理器缓存回写到内存。 2.一个处理器的缓存回写到内存会导致其他处理器的缓存无效。
+volatile实现原理：1. Lock前缀指令会引起处理器缓存回写到内存(当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。)。 2.一个处理器的缓存回写到内存会导致其他处理器的缓存无效(当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效。线程接下来将从主内存中读取共享变量。)。
 
 **synchronized（JDK6之前称之为重量级锁）**
 JVM基于进入和退出Monitor对象来实现方法同步和代码块同步，但两者的实现细节不一样。代码块同步是使用monitorenter和monitorexit指令实现的，而方法同步是使用另外一种方式实现的，细节在JVM规范里并没有详细说明。但是，方法的同步同样可以使用这两个指令来实现。<br />
 synchronized用的锁是存在Java对象头里的。如果对象是数组类型，则虚拟机用3个字宽（Word）存储对象头，如果对象是非数组类型，则用2字宽存储对象头。在32位虚拟机中，1字宽等于4字节，即32bit
 
-**偏向锁/轻量级锁/重量级锁**
-在JDK6通过引入锁升级的机制来实现更高效的内置锁（Synchronized），这三种锁的状态是通过对象监视器在对象头中的字段来表明的。
+**偏向锁 < 轻量级锁/重量级锁**
+在JDK6通过引入锁升级的机制来实现更高效的内置锁（Synchronized），这三种锁的状态是通过对象监视器在对象头中的字段来表明的。<br />
+JDK6为了减少获得锁和释放锁带来的开销，引入了“偏向锁”和“轻量级锁”，在JDK6中，锁一共有4种状态，级别从低到高依次是：无锁状态、偏向锁状态、轻量级锁状态和重量级锁状态，这几个状态会随着竞争情况逐渐升级。锁可以升级但不能降级，意味着偏向锁升级成轻量级锁后不能降级成偏向锁。这种锁升级却不能降级的策略，目的是为了提高获得锁和释放锁的效率
 
 **Java内存分配**
 常见的堆上分配内存的方法有“指针碰撞”和“空闲列表”。
 
 **Java内存模型（JMM）**
+Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共享变量的写入何时对另一个线程可见，如下图：
+![JMM](https://user-images.githubusercontent.com/6687462/86532289-65ab1100-befb-11ea-8b0b-7d2b656ab1f1.png)
+从JDK5开始，Java使用新的JSR-133内存模型。JSR-133使用happens-before的概念来阐述操作之间的内存可见性。在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。这里提到的两个操作既可以是在一个线程之内，也可以是在不同线程之间。
+与我们密切相关的happens-before规则如下：\
+1. 一个线程中的每个操作，happens-before于该线程中的任意后续操作。
+2. 监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。
+3. 对一个volatile域的写，happens-before于任意后续对这个volatile域的读。
+4. 如果A happens-before B，且B happens-before C，那么A happens-before C。
 
 ###IO
 
@@ -268,5 +280,3 @@ https://www.linuxjournal.com/article/6345
 《Java并发编程的艺术》
 
 ### 伪共享
-
-
