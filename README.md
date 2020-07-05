@@ -159,7 +159,7 @@ Redis Sentinel<br/>
 * http://doc.redisfans.com/
 
 ## <分布式系统>
-###常见的一致性算法
+### 常见的一致性算法
 
 
 ## <基础框架>
