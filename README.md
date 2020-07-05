@@ -178,7 +178,7 @@ org.springframework.beans和org.springframework.context包是Spring框架的IoC�
 
 #### AOP
 Spring通过使用基于Schema的方法或@AspectJ注释样式，提供了编写自定义方面的简单而强大的方式。<br />
-**核心概念**<br />
+**AOP核心概念**<br />
 切面（Aspect）：横跨多个类的关注点的模块化<br />
 连接点（Join point）：程序执行期间的一个点，在Spring AOP中，连接点总是表示一个方法的执行。<br />
 增强（Advice）：一个切面在特定连接点所采取的操作。不同类型的建议包括“around”、“before”和“after”增强。许多AOP框架，包括Spring，都将一个增强建模为一个拦截器，并在连接点周围维护一个拦截器链。
