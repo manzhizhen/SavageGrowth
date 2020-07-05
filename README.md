@@ -263,6 +263,7 @@ JDK6为了减少获得锁和释放锁带来的开销，引入了“偏向锁”�
 **Java内存模型（JMM）**
 Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共享变量的写入何时对另一个线程可见，如下图：
 ![JMM](https://user-images.githubusercontent.com/6687462/86532289-65ab1100-befb-11ea-8b0b-7d2b656ab1f1.png)
+
 从JDK5开始，Java使用新的JSR-133内存模型。JSR-133使用happens-before的概念来阐述操作之间的内存可见性。在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。这里提到的两个操作既可以是在一个线程之内，也可以是在不同线程之间。
 与我们密切相关的happens-before规则如下：\
 1. 一个线程中的每个操作，happens-before于该线程中的任意后续操作。
