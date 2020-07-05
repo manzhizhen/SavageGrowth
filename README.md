@@ -153,13 +153,13 @@ Redis Sentinel<br/>
 3. 一个健壮的部署至少需要三个Sentinel实例。
 4. Sentinels，Redis实例（主服务器和副本）以及连接到Sentinel和Redis的客户端的总和也是具有特定属性的大型分布式系统。
 
-
-
-
 **扩展知识点：** HyperLogLog<br />
 **参考资料：** 
 * https://redis.io/
 * http://doc.redisfans.com/
+
+## <分布式系统>
+###常见的一致性算法
 
 
 ## <基础框架>
@@ -232,11 +232,31 @@ G1收集器的运作过程大致可划分为以下四个步骤：<br />
 深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）
 
 ## < Java基础 >
-###并发
 
-###Java锁分类
+###Java引用
+强引用、软引用、弱引用、虚引用
+ThreadLocal中使用了
 
-###Java内存模型（JMM）
+
+###多线程
+**Java线程5大状态**
+![Java线程状态](https://user-images.githubusercontent.com/6687462/86524741-dbd65600-beb0-11ea-8d52-27dc94f294e5.png)
+
+**volatile**
+volatile是轻量级的synchronized，它在多处理器开发中保证了共享变量的“可见性”，它比synchronized的使用和执行成本更低，因为它不会引起线程上下文的切换和调度。<br />
+volatile实现原理：1. Lock前缀指令会引起处理器缓存回写到内存。 2.一个处理器的缓存回写到内存会导致其他处理器的缓存无效。
+
+**synchronized（JDK6之前称之为重量级锁）**
+JVM基于进入和退出Monitor对象来实现方法同步和代码块同步，但两者的实现细节不一样。代码块同步是使用monitorenter和monitorexit指令实现的，而方法同步是使用另外一种方式实现的，细节在JVM规范里并没有详细说明。但是，方法的同步同样可以使用这两个指令来实现。<br />
+synchronized用的锁是存在Java对象头里的。如果对象是数组类型，则虚拟机用3个字宽（Word）存储对象头，如果对象是非数组类型，则用2字宽存储对象头。在32位虚拟机中，1字宽等于4字节，即32bit
+
+**偏向锁/轻量级锁/重量级锁**
+在JDK6通过引入锁升级的机制来实现更高效的内置锁（Synchronized），这三种锁的状态是通过对象监视器在对象头中的字段来表明的。
+
+**Java内存分配**
+常见的堆上分配内存的方法有“指针碰撞”和“空闲列表”。
+
+**Java内存模型（JMM）**
 
 ###IO
 
@@ -245,6 +265,7 @@ G1收集器的运作过程大致可划分为以下四个步骤：<br />
 **参考资料：**
 https://developer.ibm.com/articles/j-zerocopy/
 https://www.linuxjournal.com/article/6345
+《Java并发编程的艺术》
 
 ### 伪共享
 
