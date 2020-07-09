@@ -1,5 +1,7 @@
 # SavageGrowth
 ## 帮助程序员找到适合自己的“成长框架”
+**让我们抓住这些关键设计！！！**
+
 念念不忘必有回响，持续更新中...
 
 # <架构设计>
@@ -188,6 +190,25 @@ AOP代理(AOP proxy)：由AOP框架创建的一个对象，用于实现切面合
 
 Spring AOP并未想和AspectJ竞争以提供全面的AOP解决方案，而是和Spring IoC和AspectJ结合，Spring AOP默认将标准JDK动态代理用于AOP代理。这使得可以代理任何接口（或一组接口）。Spring AOP也可以使用CGLIB代理。这对于代理类而不是接口是必需的。默认情况下，如果业务对象未实现接口，则使用CGLIB。
 
+### Spring Boot
+**目的：** Spring Boot是为了让我们创建独立的基于Spring的产品级应用更容易，Spring Boot采用"约定优于配置"的思路，让我们只需要少量配置就可以启用Spring Boot应用，降低了Spring应用的建设成本。
+
+**特征**<br />
+* 直接嵌入Tomcat，Jetty或Undertow（无需部署WAR文件）。
+* 提供“starter”依赖项，以简化构建配置。
+* 尽可能自动配置Spring和第三方库。
+* 提供可用于生产的功能，例如指标，运行状况检查和外部化配置。
+* 完全没有代码生成，也不需要XML配置。
+
+**外部化配置（Externalized Configuration）**<br />
+
+
+**自动配置**<br />
+
+**参考资料**<br />
+* https://spring.io/projects/spring-boot#overview
+
+
 ## <常见工具>
 ### Arthas
 
@@ -278,9 +299,11 @@ Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共
 
 ### 零拷贝
 
-**参考资料：**
-https://developer.ibm.com/articles/j-zerocopy/
-https://www.linuxjournal.com/article/6345
-《Java并发编程的艺术》
+
 
 ### 伪共享
+
+**参考资料：**
+* https://developer.ibm.com/articles/j-zerocopy/
+* https://www.linuxjournal.com/article/6345
+* 《Java并发编程的艺术》
