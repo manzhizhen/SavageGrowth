@@ -201,9 +201,11 @@ Spring AOP并未想和AspectJ竞争以提供全面的AOP解决方案，而是和
 * 完全没有代码生成，也不需要XML配置。
 
 **外部化配置（Externalized Configuration）**<br />
-
+Spring Boot使您可以外部化配置，以便可以在不同环境中使用相同的应用程序代码。您可以使用属性文件，YAML文件，环境变量和命令行参数来外部化配置。属性值可以通过直接注射到你的bean @Value注释，通过Spring的访问Environment抽象，或者通过@ConfigurationProperties绑定到结构化对象。
 
 **自动配置**<br />
+您需要非常注意添加bean定义的顺序，因为这些条件是根据到目前为止已处理的内容来评估的。因此，我们建议仅在自动配置类上使用@ConditionalOnBean和@ConditionalOnMissingBean
+注释（因为保证在添加任何用户定义的Bean定义后才会加载这些注释）。
 
 **参考资料**<br />
 * https://spring.io/projects/spring-boot#overview
