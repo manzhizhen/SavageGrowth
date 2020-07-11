@@ -23,9 +23,12 @@
         - [MySQL](#MySQL)
     - [NoSQL](#NoSQL)
         - [Redis](#Redis)
- - [分布式系统](#分布式系统)
+- [分布式系统](#分布式系统)
     - [常见的一致性算法](#常见的一致性算法)
- - [基础框架](#基础框架) 
+- [Web服务器](#Web服务器)
+    - [Nginx](#Nginx)
+    - [Tomcat](#Tomcat)
+- [基础框架](#基础框架) 
     - [Spring](#Spring) 
  
     
@@ -188,8 +191,15 @@ Redis Sentinel<br/>
 * http://doc.redisfans.com/
 
 ## 分布式系统
+
 ### 常见的一致性算法
 
+
+## Web服务器
+
+### Nginx
+
+### Tomcat
 
 ## 基础框架
 ### Spring
