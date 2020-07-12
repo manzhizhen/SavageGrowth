@@ -14,7 +14,7 @@
 - [云原生](#云原生)
     - [定义](#定义)
     - [Docker](#Docker)
-    - [ServiceMesh](#ServiceMesh)
+    - [Service Mesh](#ServiceMesh)
     - [Serverless](#Serverless)
 - [存储](#存储)
     - [RDS](#RDS)
@@ -27,8 +27,23 @@
     - [Nginx](#Nginx)
     - [Tomcat](#Tomcat)
 - [基础框架](#基础框架) 
-    - [Spring](#Spring) 
- 
+    - [Spring](#Spring)
+    - [Spring Boot](#SpringBoot)  
+- [常见工具](#常见工具) 
+    - [Arthas](#Arthas)
+- [JVM](#JVM) 
+    - [运行时数据区域](#运行时数据区域)
+    - [垃圾收集算法](#垃圾收集算法)
+    - [垃圾收集器](#垃圾收集器)
+    - [类加载的过程](#类加载的过程)
+- [Java&操作系统基础](#Java&操作系统基础)
+    - [Java引用](#Java引用) 
+    - [多线程](#多线程) 
+    - [IO](#IO)     
+    - [零拷贝](#零拷贝)       
+    - [伪共享](#伪共享)     
+    
+    
     
 # 架构设计
 ## 架构的定义
@@ -188,19 +203,19 @@ Redis Sentinel<br/>
 * https://redis.io/
 * http://doc.redisfans.com/
 
-## 分布式系统
+# 分布式系统
 
-### 常见的一致性算法
+## 常见的一致性算法
 
 
-## Web服务器
+# Web服务器
 
-### Nginx
+## Nginx
 
-### Tomcat
+## Tomcat
 
-## 基础框架
-### Spring
+# 基础框架
+## Spring
 Spring中最核心的接口是BeanFactory，它是我们访问Spring Bean容器的根接口，里面定义了很多通过名字或类型来获取Bean的方法，BeanFactory提供了一种高级配置机制，能够管理任何类型的对象。<br />
 Spring中另一个核心接口是ApplicationContext，它是BeanFactory的子接口，它提供了如下功能：
 1. 与Spring的AOP功能轻松集成
@@ -210,10 +225,10 @@ Spring中另一个核心接口是ApplicationContext，它是BeanFactory的子接
 
 简而言之，BeanFactory提供了配置框架和基本功能，并ApplicationContext增加了更多针对企业的功能。
 
-#### IoC
+**IoC**
 org.springframework.beans和org.springframework.context包是Spring框架的IoC容器的基础。
 
-#### AOP
+**AOP**
 Spring通过使用基于Schema的方法或@AspectJ注释样式，提供了编写自定义方面的简单而强大的方式。<br />
 **AOP核心概念**<br />
 切面（Aspect）：横跨多个类的关注点的模块化<br />
@@ -225,7 +240,7 @@ AOP代理(AOP proxy)：由AOP框架创建的一个对象，用于实现切面合
 
 Spring AOP并未想和AspectJ竞争以提供全面的AOP解决方案，而是和Spring IoC和AspectJ结合，Spring AOP默认将标准JDK动态代理用于AOP代理。这使得可以代理任何接口（或一组接口）。Spring AOP也可以使用CGLIB代理。这对于代理类而不是接口是必需的。默认情况下，如果业务对象未实现接口，则使用CGLIB。
 
-### Spring Boot
+## SpringBoot
 **目的：** Spring Boot是为了让我们创建独立的基于Spring的产品级应用更容易，Spring Boot采用"约定优于配置"的思路，让我们只需要少量配置就可以启用Spring Boot应用，降低了Spring应用的建设成本。
 
 **特征**<br />
@@ -246,22 +261,22 @@ Spring Boot使您可以外部化配置，以便可以在不同环境中使用相
 * https://spring.io/projects/spring-boot#overview
 
 
-## <常见工具>
-### Arthas
+# 常见工具
+## Arthas
 
 
-## < JVM >
-### 运行时数据区域
+# JVM
+## 运行时数据区域
 线程私有的内存区域有程序计数器、Java虚拟机栈和本地方法栈，程序计数器是Java虚拟机规范中唯一没有要求OOM的地方；线程公用的有堆和方法区，方法区在JDK8之前的HotSpot叫做永久代，在JDK8以及之后叫做元数据区，元数据区作为直接内存来管理，只受操作系统内存的限制。
 
-### 垃圾收集算法
+## 垃圾收集算法
 主要是标记-清除、标记-复制和标记-整理三种。<br />
 **标记-清除** 该算法有两个缺点，一个是效率不稳定，如果大量对象都需要标记和清除的话，开销会比较大，另一个是会导致碎片化严重，导致给新对象分配内存空间时需要进行碎片整理，增加了运行时内存分配的成本。<br />
 **标记-复制** 如果每次只有少量对象存活（例如新生代内的对象就是如此），那么只需要保留（复制）这少量对象就行了，所以有人提出了该算法，“半区复制”（Semispace Copying）的垃圾收集算法，它将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。<br />
 **标记-整理** 如果每次都会有大量对象存活（例如老年代），那么标记-复制算法需要复制的对象数量将很多，标记过程仍然与“标记-清除”算法一样，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向内存空间一端移动，然后直接清理掉边界以外的内存。
 
 
-### 垃圾收集器
+## 垃圾收集器
 大多数垃圾收集器都遵循分代收集理论（G1除外），一般把堆分为新生代和老年代。
 
 部分收集（Partial GC）：指目标不是完整收集整个Java堆的垃圾收集。
@@ -286,20 +301,20 @@ G1收集器的运作过程大致可划分为以下四个步骤：<br />
 3. 最终标记（Final Marking）：对用户线程做另一个短暂的暂停，用于处理并发阶段结束后仍遗留下来的最后那少量的SATB记录。
 4. 筛选回收（Live Data Counting and Evacuation）：负责更新Region的统计数据，对各个Region的回收价值和成本进行排序，根据用户所期望的停顿时间来制定回收计划，可以自由选择任意多个Region构成回收集，然后把决定回收的那一部分Region的存活对象复制到空的Region中，再清理掉整个旧Region的全部空间。这里的操作涉及存活对象的移动，是必须暂停用户线程，由多条收集器线程并行完成的。
   
-**类加载的过程**  
+## 类加载的过程
 分为加载、验证、准备、解析和初始化这五个阶段.
   
 **参考资料：**
 深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）
 
-## < Java基础 >
+# Java&操作系统基础
 
-###Java引用
+##Java引用
 强引用、软引用、弱引用、虚引用
 ThreadLocal中使用了
 
 
-###多线程
+##多线程
 **Java线程5大状态**
 ![Java线程状态](https://user-images.githubusercontent.com/6687462/86524741-dbd65600-beb0-11ea-8d52-27dc94f294e5.png)
 
@@ -332,13 +347,13 @@ Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共
 3. 对一个volatile域的写，happens-before于任意后续对这个volatile域的读。
 4. 如果A happens-before B，且B happens-before C，那么A happens-before C。
 
-###IO
+## IO
 
-### 零拷贝
+## 零拷贝
 
 
 
-### 伪共享
+## 伪共享
 
 **参考资料：**
 * https://developer.ibm.com/articles/j-zerocopy/
