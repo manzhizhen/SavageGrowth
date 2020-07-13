@@ -367,19 +367,22 @@ Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共
 ![IO模型示意图](https://user-images.githubusercontent.com/6687462/87288119-8263cc00-c52d-11ea-9385-28a910c22234.png)
 
 **阻塞式I/O**
-默认情况下，所有套接字都是阻塞的，如下图：
+请求进程阻塞，直到I/O操作完成，默认情况下，所有套接字都是阻塞的，如下图：
 ![阻塞IO模型](https://user-images.githubusercontent.com/6687462/87281887-45480b80-c526-11ea-80d2-e994498d99e8.png)
 
 **非阻塞式I/O**
+不导致请求进程阻塞：
 ![非阻塞IO模型](https://user-images.githubusercontent.com/6687462/87282513-edf66b00-c526-11ea-863b-56e0a5a9e885.png)
 
 **I/O复用**
+I/O multiplexing这里面的multiplexing指在单个线程通过记录跟踪每一个Socket(I/O流)的状态来同时管理多个I/O流. 
 ![IO多路复用](https://user-images.githubusercontent.com/6687462/87282705-20a06380-c527-11ea-9691-13172894e4c6.png)
 
 **信号驱动式I/O**
 ![信号驱动IO](https://user-images.githubusercontent.com/6687462/87285347-01ef9c00-c52a-11ea-8f7d-185d04195451.png)
 
 **异步I/O**
+异步I/O和上面提的信号驱动式I/O的主要区别在于信号驱动式I/O是由内核通知我们合适可以启动一个I/O操作，而异步I/O是由内核通知我们I/O操作何时完成。
 ![异步IO](https://user-images.githubusercontent.com/6687462/87289138-d7541200-c52e-11ea-8a0c-15f8cc1fd113.png)
 
 ## 零拷贝
