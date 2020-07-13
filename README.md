@@ -39,7 +39,7 @@
 - [Java&操作系统基础](#Java&操作系统基础)
     - [Java引用](#Java引用) 
     - [多线程](#多线程) 
-    - [IO](#IO)     
+    - [I/O](#I/O)     
     - [零拷贝](#零拷贝)       
     - [伪共享](#伪共享)     
     
@@ -347,7 +347,40 @@ Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共
 3. 对一个volatile域的写，happens-before于任意后续对这个volatile域的读。
 4. 如果A happens-before B，且B happens-before C，那么A happens-before C。
 
-## IO
+## I/O
+**用户空间与内核空间**
+针对 Linux 操作系统而言，最高的 1G 字节(从虚拟地址 0xC0000000 到 0xFFFFFFFF)由内核使用，称为内核空间。而较低的 3G 字节(从虚拟地址 0x00000000 到 0xBFFFFFFF)由各个进程使用，称为用户空间。
+在CPU的所有指令中，有些指令非常危险，如果错用，将导致系统崩溃，比如清内存、设置时钟等。如果允许所有的程序都可以使用这些指令，那么系统崩溃的概率将大大增加。
+所以，CPU将指令分为特权指令和非特权指令，对于那些危险的指令，只允许操作系统及其相关模块使用，普通应用程序只能使用那些不会造成灾难的指令。比如Intel的CPU将特权等级分为4个级别：Ring0~Ring3。
+其实Linux系统只使用了Ring0和Ring3 两个运行级别(Windows 系统也是一样的)。当进程运行在Ring3级别时被称为运行在用户态，而运行在Ring0级别时被称为运行在内核态。
+
+**用户态与内核态**
+当进程运行在内核空间时就处于内核态，而进程运行在用户空间时则处于用户态。
+
+**Unix中5种I/O模型**
+* 阻塞式I/O
+* 非阻塞式I/O
+* I/O复用(select和poll)
+* 信号驱动式I/O(SIGIO)
+* 异步I/O(POSIX的aio_系列函数)
+
+![IO模型示意图](https://user-images.githubusercontent.com/6687462/87288119-8263cc00-c52d-11ea-9385-28a910c22234.png)
+
+**阻塞式I/O**
+默认情况下，所有套接字都是阻塞的，如下图：
+![阻塞IO模型](https://user-images.githubusercontent.com/6687462/87281887-45480b80-c526-11ea-80d2-e994498d99e8.png)
+
+**非阻塞式I/O**
+![非阻塞IO模型](https://user-images.githubusercontent.com/6687462/87282513-edf66b00-c526-11ea-863b-56e0a5a9e885.png)
+
+**I/O复用**
+![IO多路复用](https://user-images.githubusercontent.com/6687462/87282705-20a06380-c527-11ea-9691-13172894e4c6.png)
+
+**信号驱动式I/O**
+![信号驱动IO](https://user-images.githubusercontent.com/6687462/87285347-01ef9c00-c52a-11ea-8f7d-185d04195451.png)
+
+**异步I/O**
+![异步IO](https://user-images.githubusercontent.com/6687462/87289138-d7541200-c52e-11ea-8a0c-15f8cc1fd113.png)
 
 ## 零拷贝
 
@@ -359,3 +392,5 @@ Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共
 * https://developer.ibm.com/articles/j-zerocopy/
 * https://www.linuxjournal.com/article/6345
 * 《Java并发编程的艺术》
+* 《Unix网络编程（卷一）》
+* https://www.tqwba.com/x_d/jishu/17958.html
