@@ -42,9 +42,14 @@
     - [I/O](#I/O)     
     - [零拷贝](#零拷贝)       
     - [伪共享](#伪共享)     
-    
-    
-    
+- [网络](#网络)
+    - [TCP](#TCP)
+- [数据结构](#数据结构)
+    - [BitMap](#BitMap)    
+- [算法](#算法)
+ 
+ 
+   
 # 架构设计
 ## 架构的定义
 **软件架构定义（之一）：** 软件架构式解释该系统所需的结构体的集合，其中包括：软件元素、元素之间的相互关系，以及二者各自的属性。 
@@ -410,12 +415,21 @@ I/O multiplexing这里面的multiplexing指在单个线程通过记录跟踪每�
 
 ## 伪共享
 
-**参考资料：**
+
+
+**参考资料：**<br />
 * https://developer.ibm.com/articles/j-zerocopy/
 * https://www.linuxjournal.com/article/6345
 * 《Java并发编程的艺术》
 * 《Unix网络编程（卷一）》
 * https://www.tqwba.com/x_d/jishu/17958.html
+
+# 网络
+## TCP
+**三次握手和四次挥手**
+![TCP三次握手和四次挥手](https://user-images.githubusercontent.com/6687462/87508147-4fdae000-c6a1-11ea-8e50-974de1e9b49c.png)
+
+**Nagle算法**
 
 # 数据结构
 ## BitMap
