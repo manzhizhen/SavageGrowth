@@ -426,6 +426,8 @@ I/O multiplexing这里面的multiplexing指在单个线程通过记录跟踪每�
 
 # 网络
 ## TCP
+为了通过IP数据报实现可靠传输，需要考虑很多事情，例如数据的破坏、丢包、重复已经分片顺序混乱等问题，TCP通过校验和、序列号、确认应答、重发控制、连接管理以及窗口控制等机制实现可靠传输。
+
 **三次握手和四次挥手**
 ![TCP三次握手和四次挥手](https://user-images.githubusercontent.com/6687462/87508147-4fdae000-c6a1-11ea-8e50-974de1e9b49c.png)<br />
 
