@@ -19,8 +19,8 @@
 - [云原生](#云原生)
     - [定义](#定义)
     - [Docker](#Docker)
-    - [Service Mesh](#ServiceMesh)
-    - [Serverless](#Serverless)
+    - [Service Mesh](#ServiceMesh(服务网格))
+    - [Serverless](#Serverless(无服务器))
 - [存储](#存储)
     - [RDS](#RDS)
         - [MySQL](#MySQL)
@@ -39,6 +39,8 @@
 - [Web服务器](#Web服务器)
     - [Nginx](#Nginx)
     - [Tomcat](#Tomcat)
+- [DevOps](#DevOps)
+    - [DevOps定义](#DevOps定义)
 - [基础框架](#基础框架) 
     - [Spring](#Spring)
     - [Spring Boot](#SpringBoot)  
@@ -159,7 +161,8 @@
 最基本的五大设计原则（SOLID）：单一职责原则、开放封闭原则、里式替换原则、接口隔离原则和依赖倒置原则。
 
 
-## 业务系统设计的基本原则
+## 业务系统架构设计的基本原则
+业务系统架构设计四要素：
 
 **1. 可维护性是根本**
 * 代码可读性很关键
@@ -357,7 +360,7 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 ## Tomcat
 
 # DevOps
-## 定义
+## DevOps定义
 DevOps是一组用于促进开发和运维人员之间协作以达到缩短软件交付周期的过程、方法和系统的统称。
 
 ## 持续集成
