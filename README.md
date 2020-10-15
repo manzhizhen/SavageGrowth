@@ -368,6 +368,10 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 **参考资料**<br />
 * https://www.infoq.cn/article/pB7D0l9Ho190UWPvM4tZ?utm_source=related_read_bottom&utm_medium=article
 * http://book.mixu.net/distsys/index.html  --Distributed systems for fun and profit
+* http://principles-wiki.net/principles:fallacies_of_distributed_computing  
+* https://www.the-paper-trail.org/post/2014-08-09-distributed-systems-theory-for-the-distributed-systems-engineer/
+* https://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/
+* http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.41.7628&rep=rep1&type=pdf
 
 
 # 基础框架
