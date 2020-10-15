@@ -366,7 +366,8 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 持续集成成指的是在软件开发过程中，软件开发人员持续不断地将开发出来的代码和其他的开发人员的代码进行合并，每次合并后自动地进行编译、构建，并运行自动化测试进行验证，而不是等到最后各自开发完成后才合并在一起。持续集成能从根本上提高一个团队的软件开发效率。在软件开发过程中引入持续集成，可以帮助团队及时的发现系统中的问题，并快速做出修复，不仅可以缩短软件开发的时间，而且可以交付更具质量的系统。
 
 **参考资料**<br />
-https://www.infoq.cn/article/pB7D0l9Ho190UWPvM4tZ?utm_source=related_read_bottom&utm_medium=article
+* https://www.infoq.cn/article/pB7D0l9Ho190UWPvM4tZ?utm_source=related_read_bottom&utm_medium=article
+* http://book.mixu.net/distsys/index.html  --Distributed systems for fun and profit
 
 
 # 基础框架
