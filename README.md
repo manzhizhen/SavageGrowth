@@ -341,6 +341,7 @@ Redis Sentinel<br/>
 Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于消息传递的一致性算法，其解决的问题是分布式系统如何就某个值(决议)达成一致。
 
 ### Raft
+
 ### Gossip
 ### ZAB
 
@@ -373,7 +374,8 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 * https://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/
 * http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.41.7628&rep=rep1&type=pdf
 * https://mercyblitz.github.io/2020/05/11/Apache-Dubbo-%E6%9C%8D%E5%8A%A1%E8%87%AA%E7%9C%81%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/
-* https://www.cnkirito.moe/dubbo-app-pubsub/
+* https://blog.csdn.net/alisystemsoftware/article/details/106615082
+* http://thesecretlivesofdata.com/raft/
 
 
 # 基础框架
