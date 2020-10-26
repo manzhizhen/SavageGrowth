@@ -259,12 +259,23 @@ NoSQL常见的四种类型：键值对型、文档型、列式存储型和图型
 ### Redis
 **定义**<br />
 Redis是一种采用内存来作为数据结构存储的数据库、缓存和消息代理。<br />
+
 **部署说明**<br />
 Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如Linux，* BSD，OS X，而无需外部依赖。Linux和OS X是Redis开发和测试最多的两个操作系统，我们建议使用Linux进行部署。<br/>
+
 **内部数据结构**<br />
 简单动态字符串(Simple Dynamic Strings, SDS)、双端链表、跳跃表(skiplist)、压缩列表、快速列表(Redis3.2引入，quicklist)、字典(散列表)、整数集合(intset)
+
 **支持的数据结构**<br />
 字符串，哈希，列表，集合，带范围查询的排序集合，位图，HyperLogLog，地理空间索引。<br/>
+
+**Redis是单线程的。如何利用多个多核CPU？**<br />
+CPU成为Redis瓶颈的情况并不常见，因为Redis通常是内存或网络绑定的。例如，在一个普通的Linux系统上运行的流水线Redis每秒甚至可以传递100万个请求，所以如果您的应用程序主要使用O（N）或O（log（N））命令，它几乎不会占用太多的CPU。
+但是，为了最大限度地利用CPU，可以在同一个机器中启动多个Redis实例，并将它们视为不同的服务器。然而，随着Redis 4.0的推出，我们开始让Redis多线程化。目前，这仅限于在后台删除对象，以及阻止通过Redis模块实现的命令。对于未来的版本，计划是让Redis越来越多线程化。
+
+**Redis6的多线程特性**
+Redis的多线程部分只是用来处理网络数据的读写和协议解析，执行命令仍然是单线程顺序执行。所以我们不需要去考虑控制 key、lua、事务，LPUSH/LPOP 等等的并发及线程安全问题。
+
 **持久化方案**<br />
 Redis持久化方案分为RDB和AOF两种。<br/>
 RDB：按指定的时间间隔执行数据集的时间点快照。 <br />
@@ -317,6 +328,8 @@ Redis Sentinel<br/>
 **参考资料：** 
 * https://redis.io/
 * http://doc.redisfans.com/
+* https://redis.io/topics/faq
+* https://www.cnblogs.com/madashu/p/12832766.html
 
 # 分布式系统
 
