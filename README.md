@@ -451,6 +451,9 @@ Spring Boot使您可以外部化配置，以便可以在不同环境中使用相
 **参考资料**<br />
 * https://spring.io/projects/spring-boot#overview
 * https://netty.io/wiki/new-and-noteworthy-in-5.0.html
+* https://netty.io/wiki/new-and-noteworthy-in-4.1.html
+* https://netty.io/wiki/new-and-noteworthy-in-4.0.html
+
 
 
 # 常见工具
