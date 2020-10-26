@@ -434,8 +434,23 @@ Spring Boot使您可以外部化配置，以便可以在不同环境中使用相
 您需要非常注意添加bean定义的顺序，因为这些条件是根据到目前为止已处理的内容来评估的。因此，我们建议仅在自动配置类上使用@ConditionalOnBean和@ConditionalOnMissingBean
 注释（因为保证在添加任何用户定义的Bean定义后才会加载这些注释）。
 
+## Netty
+**Netty5变化**
+* 简化的处理程序类型层次结构：ChannelInboundHandler并ChannelOutboundHandler已合并为ChannelHandler。ChannelHandler
+现在具有入站和出站处理程序方法。ChannelInboundHandlerAdapter，ChannelOutboundHandlerAdapter和，ChannelDuplexHandlerAdapter已被弃用，并由代替ChannelHandlerAdapter。由于现在无法确定处理程序是入站处理程序还是出站处理程序，因此CombinedChannelDuplexHandler已被替换ChannelHandlerAppender。
+* 更加灵活的线程模型：
+在Netty 4.x中，每个EventLoop线程都与固定线程紧密耦合，该线程执行其注册的所有I / O事件Channels以及提交给它的所有任务。
+从版本5.0开始，EventLoop不再使用线程，而是使用Executor抽象。也就是说，它将Executor对象作为其构造函数中的参数，而不是在无穷循环中轮询I / O事件，每个迭代现在都是提交给this的任务Executor。
+如果未指定，Executor默认情况下使用ForkJoinPool。AForkJoinPool具有使用线程本地队列的不错的属性。也就是说，提交给ForkJoinPoolfrom的任务Thread A很可能由执行Thread A again。这应该提供EventLoops高级别的线程亲和力。
+此外，开发人员还可以提供自己的Executor（也称为线程池）并接管的调度EventLoops。当Netty用作大型软件系统的一部分时，这可能证明是有用的。假设该系统已经使用具有高度并行性的线程池来最佳地执行其所有任务。Netty 4.x只会产生自己的线程，而完全忽略它是更大系统的一部分的事实。从Netty 5.0开始，开发人员可以在同一线程池中运行Netty和系统的其余部分，并通过应用更好的调度策略和更少的调度开销（由于线程数减少）来潜在地提高性能。有关此更改的详细讨论，请查看GitHub第2250期。
+应该提到的是，这种改变绝不影响ChannelHandlers开发的方式。从开发人员的角度来看，唯一改变的是不再保证aChannelHandler将始终由同一线程执行。但是，可以保证它永远不会被两个或多个线程同时执行。此外，Netty还可以解决可能发生的任何内存可见性问题。因此，无需担心volatile内的线程安全性和变量ChannelHandler。
+这种变化的一个意义是NioEventLoop，NioEventLoopGroup，EpollEventLoop和 EpollEventLoopGroup做不再需要ThreadFactory的对象构造函数的参数。这些类的构造函数已更新为使用Executor和ExecutorFactory对象。
+
+
+
 **参考资料**<br />
 * https://spring.io/projects/spring-boot#overview
+* https://netty.io/wiki/new-and-noteworthy-in-5.0.html
 
 
 # 常见工具
