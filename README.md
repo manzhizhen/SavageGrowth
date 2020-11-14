@@ -259,12 +259,23 @@ NoSQL常见的四种类型：键值对型、文档型、列式存储型和图型
 ### Redis
 **定义**<br />
 Redis是一种采用内存来作为数据结构存储的数据库、缓存和消息代理。<br />
+
 **部署说明**<br />
 Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如Linux，* BSD，OS X，而无需外部依赖。Linux和OS X是Redis开发和测试最多的两个操作系统，我们建议使用Linux进行部署。<br/>
+
 **内部数据结构**<br />
 简单动态字符串(Simple Dynamic Strings, SDS)、双端链表、跳跃表(skiplist)、压缩列表、快速列表(Redis3.2引入，quicklist)、字典(散列表)、整数集合(intset)
+
 **支持的数据结构**<br />
 字符串，哈希，列表，集合，带范围查询的排序集合，位图，HyperLogLog，地理空间索引。<br/>
+
+**Redis是单线程的。如何利用多个多核CPU？**<br />
+CPU成为Redis瓶颈的情况并不常见，因为Redis通常是内存或网络绑定的。例如，在一个普通的Linux系统上运行的流水线Redis每秒甚至可以传递100万个请求，所以如果您的应用程序主要使用O（N）或O（log（N））命令，它几乎不会占用太多的CPU。
+但是，为了最大限度地利用CPU，可以在同一个机器中启动多个Redis实例，并将它们视为不同的服务器。然而，随着Redis 4.0的推出，我们开始让Redis多线程化。目前，这仅限于在后台删除对象，以及阻止通过Redis模块实现的命令。对于未来的版本，计划是让Redis越来越多线程化。
+
+**Redis6的多线程特性**
+Redis的多线程部分只是用来处理网络数据的读写和协议解析，执行命令仍然是单线程顺序执行。所以我们不需要去考虑控制 key、lua、事务，LPUSH/LPOP 等等的并发及线程安全问题。
+
 **持久化方案**<br />
 Redis持久化方案分为RDB和AOF两种。<br/>
 RDB：按指定的时间间隔执行数据集的时间点快照。 <br />
@@ -328,6 +339,8 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 * http://doc.redisfans.com/
 * https://www.elastic.co/cn/elasticsearch/
 * https://github.com/elastic/elasticsearch
+* https://redis.io/topics/faq
+* https://www.cnblogs.com/madashu/p/12832766.html
 
 # 分布式系统
 
@@ -352,6 +365,7 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于消息传递的一致性算法，其解决的问题是分布式系统如何就某个值(决议)达成一致。
 
 ### Raft
+
 ### Gossip
 ### ZAB
 
@@ -377,7 +391,15 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 持续集成成指的是在软件开发过程中，软件开发人员持续不断地将开发出来的代码和其他的开发人员的代码进行合并，每次合并后自动地进行编译、构建，并运行自动化测试进行验证，而不是等到最后各自开发完成后才合并在一起。持续集成能从根本上提高一个团队的软件开发效率。在软件开发过程中引入持续集成，可以帮助团队及时的发现系统中的问题，并快速做出修复，不仅可以缩短软件开发的时间，而且可以交付更具质量的系统。
 
 **参考资料**<br />
-https://www.infoq.cn/article/pB7D0l9Ho190UWPvM4tZ?utm_source=related_read_bottom&utm_medium=article
+* https://www.infoq.cn/article/pB7D0l9Ho190UWPvM4tZ?utm_source=related_read_bottom&utm_medium=article
+* http://book.mixu.net/distsys/index.html  --Distributed systems for fun and profit
+* http://principles-wiki.net/principles:fallacies_of_distributed_computing  
+* https://www.the-paper-trail.org/post/2014-08-09-distributed-systems-theory-for-the-distributed-systems-engineer/
+* https://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/
+* http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.41.7628&rep=rep1&type=pdf
+* https://mercyblitz.github.io/2020/05/11/Apache-Dubbo-%E6%9C%8D%E5%8A%A1%E8%87%AA%E7%9C%81%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/
+* https://blog.csdn.net/alisystemsoftware/article/details/106615082
+* http://thesecretlivesofdata.com/raft/
 
 
 # 基础框架
@@ -423,8 +445,26 @@ Spring Boot使您可以外部化配置，以便可以在不同环境中使用相
 您需要非常注意添加bean定义的顺序，因为这些条件是根据到目前为止已处理的内容来评估的。因此，我们建议仅在自动配置类上使用@ConditionalOnBean和@ConditionalOnMissingBean
 注释（因为保证在添加任何用户定义的Bean定义后才会加载这些注释）。
 
+## Netty
+**Netty5变化**
+* 简化的处理程序类型层次结构：ChannelInboundHandler并ChannelOutboundHandler已合并为ChannelHandler。ChannelHandler
+现在具有入站和出站处理程序方法。ChannelInboundHandlerAdapter，ChannelOutboundHandlerAdapter和，ChannelDuplexHandlerAdapter已被弃用，并由代替ChannelHandlerAdapter。由于现在无法确定处理程序是入站处理程序还是出站处理程序，因此CombinedChannelDuplexHandler已被替换ChannelHandlerAppender。
+* 更加灵活的线程模型：
+在Netty 4.x中，每个EventLoop线程都与固定线程紧密耦合，该线程执行其注册的所有I / O事件Channels以及提交给它的所有任务。
+从版本5.0开始，EventLoop不再使用线程，而是使用Executor抽象。也就是说，它将Executor对象作为其构造函数中的参数，而不是在无穷循环中轮询I / O事件，每个迭代现在都是提交给this的任务Executor。
+如果未指定，Executor默认情况下使用ForkJoinPool。AForkJoinPool具有使用线程本地队列的不错的属性。也就是说，提交给ForkJoinPoolfrom的任务Thread A很可能由执行Thread A again。这应该提供EventLoops高级别的线程亲和力。
+此外，开发人员还可以提供自己的Executor（也称为线程池）并接管的调度EventLoops。当Netty用作大型软件系统的一部分时，这可能证明是有用的。假设该系统已经使用具有高度并行性的线程池来最佳地执行其所有任务。Netty 4.x只会产生自己的线程，而完全忽略它是更大系统的一部分的事实。从Netty 5.0开始，开发人员可以在同一线程池中运行Netty和系统的其余部分，并通过应用更好的调度策略和更少的调度开销（由于线程数减少）来潜在地提高性能。有关此更改的详细讨论，请查看GitHub第2250期。
+应该提到的是，这种改变绝不影响ChannelHandlers开发的方式。从开发人员的角度来看，唯一改变的是不再保证aChannelHandler将始终由同一线程执行。但是，可以保证它永远不会被两个或多个线程同时执行。此外，Netty还可以解决可能发生的任何内存可见性问题。因此，无需担心volatile内的线程安全性和变量ChannelHandler。
+这种变化的一个意义是NioEventLoop，NioEventLoopGroup，EpollEventLoop和 EpollEventLoopGroup做不再需要ThreadFactory的对象构造函数的参数。这些类的构造函数已更新为使用Executor和ExecutorFactory对象。
+
+
+
 **参考资料**<br />
 * https://spring.io/projects/spring-boot#overview
+* https://netty.io/wiki/new-and-noteworthy-in-5.0.html
+* https://netty.io/wiki/new-and-noteworthy-in-4.1.html
+* https://netty.io/wiki/new-and-noteworthy-in-4.0.html
+
 
 
 # 常见工具
@@ -552,6 +592,16 @@ I/O multiplexing这里面的multiplexing指在单个线程通过记录跟踪每�
 异步I/O和上面提的信号驱动式I/O的主要区别在于信号驱动式I/O是由内核通知我们合适可以启动一个I/O操作，而异步I/O是由内核通知我们I/O操作何时完成。
 ![异步IO](https://user-images.githubusercontent.com/6687462/87289138-d7541200-c52e-11ea-8a0c-15f8cc1fd113.png)
 
+**select、poll和epoll**
+* select：时间复杂度O(n)，它仅仅知道了，有I/O事件发生了，却并不知道是哪那几个流（可能有一个，多个，甚至全部），我们只能无差别轮询所有流，找出能读出数据，或者写入数据的流，对他们进行操作。所以select具有O(n)的无差别轮询复杂度，同时处理的流越多，无差别轮询时间就越长。
+
+* poll：时间复杂度O(n)，poll本质上和select没有区别，它将用户传入的数组拷贝到内核空间，然后查询每个fd对应的设备状态， 但是它没有最大连接数的限制，原因是它是基于链表来存储的.
+
+* epoll：时间复杂度O(1)，epoll可以理解为event poll，不同于忙轮询和无差别轮询，epoll会把哪个流发生了怎样的I/O事件通知我们。所以我们说epoll实际上是事件驱动（每个事件关联上fd
+）的，此时我们对这些流的操作都是有意义的。（复杂度降低到了O(1)）
+
+select，poll，epoll都是IO多路复用的机制。I/O多路复用就通过一种机制，可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。但select，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。  
+
 ## 零拷贝
 
 
@@ -566,6 +616,7 @@ I/O multiplexing这里面的multiplexing指在单个线程通过记录跟踪每�
 * 《Java并发编程的艺术》
 * 《Unix网络编程（卷一）》
 * https://www.tqwba.com/x_d/jishu/17958.html
+* https://www.cnblogs.com/aspirant/p/9166944.html
 
 # 网络
 ## TCP
