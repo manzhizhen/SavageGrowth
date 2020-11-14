@@ -298,7 +298,6 @@ AOF：会记录服务器接收的每个写入操作，这些操作将在服务�
 2. Redis支持将多个副本连接到同一主副本，并且副本还可以按级联结构连接到其他副本。从Redis 4.0开始，所有子副本将从主服务器接收完全相同的数据流。
 3. Redis复制时在Master上是无阻塞的。这意味着当一个或多个副本执行初始同步或部分重新同步时，主服务器将继续处理查询。
 
-
 **高可用：**<br/>
 Redis官方提供的高可用方案分为Redis Sentinel和Redis Cluster两种。<br/>
 Redis Sentinel<br/>
@@ -313,10 +312,22 @@ Redis Sentinel<br/>
 3. 一个健壮的部署至少需要三个Sentinel实例。
 4. Sentinels，Redis实例（主服务器和副本）以及连接到Sentinel和Redis的客户端的总和也是具有特定属性的大型分布式系统。
 
+### Elasticsearch
+**定义**<br />
+Elasticsearch是一个分布式、RESTful风格的搜索和数据分析引擎。<br />
+它为所有类型的数据提供近乎实时的搜索和分析，无论您是结构化文本还是非结构化文本，数字数据或地理空间数据，Elasticsearch都能以支持快速搜索的方式有效地对其进行存储和索引。
+**特点**<br />
+建立在Apache Lucene之上、分布式、高可用、多租户、API丰富、面向文档；
+**配合使用**<br />
+Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展现）
+
 **扩展知识点：** HyperLogLog<br />
+
 **参考资料：** 
 * https://redis.io/
 * http://doc.redisfans.com/
+* https://www.elastic.co/cn/elasticsearch/
+* https://github.com/elastic/elasticsearch
 
 # 分布式系统
 
@@ -578,7 +589,7 @@ TCP协议中是以段（Segment）为单位来发送数据的，我们也称其�
 **拥塞窗口（慢启动）**<br />
 
 **Nagle算法**<br />
-为了提高网络利用率，会经常使用Nagle算法，该算法是指发送端及时还有应该发送的数据，但如果这部分数据很少的话，则进行延迟发送的一种处理机制。具体来说就是满足如下任意一种条件才能发送数据：
+为了提高网络利用率，会经常使用Nagle算法，该算法是指发送端即使还有应该发送的数据，但如果这部分数据很少的话，则进行延迟发送的一种处理机制。具体来说就是满足如下任意一种条件才能发送数据：
 1) 已发送的数据都已经收到确认应答时。
 2) 可以发送最大段长度（MSS）的数据时。
 一般对实时性要求高的系统会关闭TCP的Nagle算法。
