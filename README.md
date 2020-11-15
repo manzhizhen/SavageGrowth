@@ -218,6 +218,10 @@
 ### Docker与虚拟机的区别
 ![Docker和虚拟机的区别](https://user-images.githubusercontent.com/6687462/99140541-bf77d080-267d-11eb-8ae7-87dedc861035.jpeg)
 
+### Docker常用命令
+* docker run --cpus=1 -m=1g --name=nginx -d nginx 
+* docker exec -it busybox sh
+
 **参考资料：**<br />
 * https://kaiwu.lagou.com/course/courseInfo.htm?courseId=455#/content?courseId=455
 
