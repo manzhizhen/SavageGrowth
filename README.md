@@ -220,6 +220,8 @@
 
 ### Docker常用命令
 * docker run --cpus=1 -m=1g --name=nginx -d nginx 
+* docker run --privileged=true --publish 2181:2181 -d zookeeper:latest
+* docker run -p 8080:8080 -d dubbo-admin
 * docker exec -it busybox sh
 
 **参考资料：**<br />
