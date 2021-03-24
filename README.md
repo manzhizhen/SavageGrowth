@@ -201,6 +201,7 @@
 * https://github.com/reactor/lite-rx-api-hands-on
 * https://www.xncoding.com/2018/04/05/java/reactor.html
 * http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf
+* https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-concurrency-model
 
 # 云原生
 ## 定义
