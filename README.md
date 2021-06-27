@@ -33,9 +33,10 @@
         - [Raft](#Raft)
         - [Gossip](#Gossip)
         - [ZAB](#ZAB)
-        - [RPC框架](#RPC框架)
-            - [Apache Dubbo](#Dubbo)
+    - [RPC框架](#RPC框架)
+        - [Apache Dubbo](#Dubbo)
     - [ZooKeeper](#ZooKeeper)
+    - [MQ](#MQ)
 - [Web服务器](#Web服务器)
     - [Nginx](#Nginx)
     - [Tomcat](#Tomcat)
@@ -400,6 +401,21 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 ## RPC框架
 ### Dubbo
 
+## MQ
+
+### Kafka
+#### 生产者
+
+#### 消费者
+**关于订阅**
+* 消费者可以单独订阅分区：可以单独订阅某个Topic的某个分区（assign）
+* 消费者可以多订阅：一个消费者可以订阅多个Topic（Topic列表或者Topic名称的正则）
+* 基于拉模式：Kafka中的消费是基于拉模式的，一个Topic分区的消息只会被所有订阅消费组中的一个消费者拉到
+* 支持正则：使用Topic的正则时新增的Topic会主动订阅
+* 消费方式互斥：集合订阅的方式subscribe（Collection）、正则表达式订阅的方式subscribe（Pattern）和指定分区的订阅方式 assign（Collection）分表代表了三种不同的订阅状态：AUTO_TOPICS、AUTO_PATTERN和USER_ASSIGNED（如果没有订阅，那么订阅状态为NONE）。然而这三种状态是互斥的，在一个消费者中只能使用其中的一种
+* 位移提交：默认的消费位移的提交方式是自动提交，默认的自动提交不是每消费一条消息就提交一次，而是定期提交，这个定期的周期时间由客户端参数auto.commit.interval.ms配置，默认值为5秒，此参数生效的前提是enable.auto.commit参数为true。
+* 新生消费者：每当消费者查找不到所记录的消费位移时，就会根据消费者客户端参数auto.offset.reset的配置来决定从何处开始进行消费，这个参数的默认值为“latest”，表示从分区末尾开始消费消息。
+
 
 
 # Web服务器
@@ -425,6 +441,7 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 * https://mercyblitz.github.io/2020/05/11/Apache-Dubbo-%E6%9C%8D%E5%8A%A1%E8%87%AA%E7%9C%81%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/
 * https://blog.csdn.net/alisystemsoftware/article/details/106615082
 * http://thesecretlivesofdata.com/raft/
+* 《深入理解Kafka：核心设计与实践原理》
 
 
 # 基础框架
