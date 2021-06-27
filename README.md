@@ -376,16 +376,24 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 **角色**：事务参与方、事务协调者<br />
 **Two-phaseCommit**：第一阶段——准备阶段(投票阶段)、第二阶段——提交阶段（执行阶段）。<br />
 **优点**：<br />
+
 **缺点**：<br />
+* 性能问题:无论是在第一阶段的过程中,还是在第二阶段,所有的参与者资源和协调者资源都是被锁住的,只有当所有节点准备完毕，事务协调者才会通知进行全局提交，
+参与者 进行本地事务提交后才会释放资源。这样的过程会比较漫长，对性能影响比较大。
+* 单节点故障:由于协调者的重要性，一旦协调者发生故障。参与者会一直阻塞下去。尤其在第二阶段，协调者发生故障，那么所有的参与者还都处于锁定事务资源的状态中，而无法继续完成事务操作。
 
 **3PC**<br />
 **角色**：事务参与方、事务协调者<br />
 **Three-phaseCommit**：第一阶段——CanCommit、第二阶段——PreCommit、第三阶段——DoCommit。<br />
 **和2PC区别**：
+3PC主要是为了解决两阶段提交协议的阻塞问题，2PC存在的问题是当协作者崩溃时，参与者不能做出最后的选择（因为参与者不知道其他参与者CanCommit的结果），因此参与者可能在协作者恢复之前保持阻塞。
 1、引入超时机制。同时在协调者和参与者中都引入超时机制。
 2、在第一阶段和第二阶段中插入一个准备阶段。保证了在最后提交阶段之前各参与节点的状态是一致的。
+![3PC](https://user-images.githubusercontent.com/6687462/123544788-71848880-d787-11eb-9995-16956d31d416.png)
 **优点**：<br />
 **缺点**：<br />
+
+### TCC（Try-Confirm-Cancel）
 
 ### Paxos
 Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于消息传递的一致性算法，其解决的问题是分布式系统如何就某个值(决议)达成一致。
@@ -442,6 +450,9 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 * https://blog.csdn.net/alisystemsoftware/article/details/106615082
 * http://thesecretlivesofdata.com/raft/
 * 《深入理解Kafka：核心设计与实践原理》
+* https://www.cnblogs.com/qdhxhz/p/11167025.html
+* https://zhuanlan.zhihu.com/p/21994882
+* http://www.tianshouzhi.com/api/tutorials/distributed_transaction/388
 
 
 # 基础框架
