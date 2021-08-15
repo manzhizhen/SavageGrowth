@@ -446,6 +446,9 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 * 位移提交：默认的消费位移的提交方式是自动提交，默认的自动提交不是每消费一条消息就提交一次，而是定期提交，这个定期的周期时间由客户端参数auto.commit.interval.ms配置，默认值为5秒，此参数生效的前提是enable.auto.commit参数为true。
 * 新生消费者：每当消费者查找不到所记录的消费位移时，就会根据消费者客户端参数auto.offset.reset的配置来决定从何处开始进行消费，这个参数的默认值为“latest”，表示从分区末尾开始消费消息。
 
+#### 参考资料
+* https://kafka.apache.org/documentation/#design
+* https://queue.acm.org/detail.cfm?id=1563874
 
 
 # Web服务器
@@ -475,6 +478,7 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 * https://www.cnblogs.com/qdhxhz/p/11167025.html
 * https://zhuanlan.zhihu.com/p/21994882
 * http://www.tianshouzhi.com/api/tutorials/distributed_transaction/388
+
 
 
 # 基础框架
