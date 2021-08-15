@@ -33,9 +33,10 @@
         - [Raft](#Raft)
         - [Gossip](#Gossip)
         - [ZAB](#ZAB)
-        - [RPC框架](#RPC框架)
-            - [Apache Dubbo](#Dubbo)
+    - [RPC框架](#RPC框架)
+        - [Apache Dubbo](#Dubbo)
     - [ZooKeeper](#ZooKeeper)
+    - [MQ](#MQ)
 - [Web服务器](#Web服务器)
     - [Nginx](#Nginx)
     - [Tomcat](#Tomcat)
@@ -200,6 +201,12 @@
 * https://github.com/reactor/reactor-core
 * https://github.com/reactor/lite-rx-api-hands-on
 * https://projectreactor.io/docs/core/release/reference/index.html#about-doc
+* https://projectreactor.io/docs/core/release/reference/index.html
+* https://github.com/reactor/lite-rx-api-hands-on
+* https://www.xncoding.com/2018/04/05/java/reactor.html
+* http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf
+* https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-concurrency-model
+
 
 # 云原生
 ## 定义
@@ -346,6 +353,23 @@ Redis Sentinel<br/>
 3. 一个健壮的部署至少需要三个Sentinel实例。
 4. Sentinels，Redis实例（主服务器和副本）以及连接到Sentinel和Redis的客户端的总和也是具有特定属性的大型分布式系统。
 
+**分布式锁:**<br/>
+有许多库和博客文章描述了如何使用Redis实现DLM（Distributed Lock Manager 分布式锁管理器），但每个库都使用不同的方法，与使用稍微复杂一点的方法相比，许多库使用的方法具有较低的保证设计。
+本页面试图提供一种更规范的算法来使用Redis实现分布式锁。我们提出了一种称为Redlock的算法，它实现了我们认为比普通单实例方法更安全的DLM。
+我们将仅使用三个属性对我们的设计进行建模，从我们的角度来看，这是以有效方式使用分布式锁所需的最低保证。
+* Safety property：互斥。在任何给定时刻，只有一个客户端可以持有锁。
+* Liveness property A：无死锁。最终总是有可能获得锁，即使锁定资源的客户端崩溃或被分区。
+* Liveness property B：容错。只要大多数Redis节点都已启动，客户端就可以获取和释放锁。
+为什么基于故障转移的实现是不够的?
+为了了解我们想要改进的地方，让我们分析大多数基于Redis的分布式锁库的当前状态。使用Redis锁定资源的最简单方法是在实例中创建密钥。密钥通常是在有限的生存时间内创建的，使用Redis过期功能，以便最终将其释放（我们列表中的属性 2）。当客户端需要释放资源时，它会删除密钥。
+从表面上看，这很有效，但有一个问题：这是我们架构中的单点故障。如果Redis master宕机了怎么办？好吧，让我们添加一个奴隶！如果主人不可用，请使用它。不幸的是，这是不可行的。这样做我们无法实现互斥的安全属性，因为 Redis 复制是异步的。
+这个模型有一个明显的竞争条件：
+1.客户端 A 获取了 master 中的锁。
+2.在对密钥的写入传输到从站之前，主站崩溃。
+3.奴隶被提升为主人。
+4.客户端B获取对A已经持有锁的同一资源的锁。违反安全！
+有时，在特殊情况下（例如在失败期间），多个客户端可以同时持有锁是完全没问题的。如果是这种情况，您可以使用基于复制的解决方案。否则，我们建议实施本文档中描述的解决方案。
+
 ### Elasticsearch
 **定义**<br />
 Elasticsearch是一个分布式、RESTful风格的搜索和数据分析引擎。<br />
@@ -359,6 +383,7 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 
 **参考资料：** 
 * https://redis.io/
+* https://redis.io/topics/distlock
 * http://doc.redisfans.com/
 * https://www.elastic.co/cn/elasticsearch/
 * https://github.com/elastic/elasticsearch
@@ -373,16 +398,24 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 **角色**：事务参与方、事务协调者<br />
 **Two-phaseCommit**：第一阶段——准备阶段(投票阶段)、第二阶段——提交阶段（执行阶段）。<br />
 **优点**：<br />
+
 **缺点**：<br />
+* 性能问题:无论是在第一阶段的过程中,还是在第二阶段,所有的参与者资源和协调者资源都是被锁住的,只有当所有节点准备完毕，事务协调者才会通知进行全局提交，
+参与者 进行本地事务提交后才会释放资源。这样的过程会比较漫长，对性能影响比较大。
+* 单节点故障:由于协调者的重要性，一旦协调者发生故障。参与者会一直阻塞下去。尤其在第二阶段，协调者发生故障，那么所有的参与者还都处于锁定事务资源的状态中，而无法继续完成事务操作。
 
 **3PC**<br />
 **角色**：事务参与方、事务协调者<br />
 **Three-phaseCommit**：第一阶段——CanCommit、第二阶段——PreCommit、第三阶段——DoCommit。<br />
 **和2PC区别**：
+3PC主要是为了解决两阶段提交协议的阻塞问题，2PC存在的问题是当协作者崩溃时，参与者不能做出最后的选择（因为参与者不知道其他参与者CanCommit的结果），因此参与者可能在协作者恢复之前保持阻塞。
 1、引入超时机制。同时在协调者和参与者中都引入超时机制。
 2、在第一阶段和第二阶段中插入一个准备阶段。保证了在最后提交阶段之前各参与节点的状态是一致的。
+![3PC](https://user-images.githubusercontent.com/6687462/123544788-71848880-d787-11eb-9995-16956d31d416.png)
 **优点**：<br />
 **缺点**：<br />
+
+### TCC（Try-Confirm-Cancel）
 
 ### Paxos
 Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于消息传递的一致性算法，其解决的问题是分布式系统如何就某个值(决议)达成一致。
@@ -397,6 +430,21 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 
 ## RPC框架
 ### Dubbo
+
+## MQ
+
+### Kafka
+#### 生产者
+
+#### 消费者
+**关于订阅**
+* 消费者可以单独订阅分区：可以单独订阅某个Topic的某个分区（assign）
+* 消费者可以多订阅：一个消费者可以订阅多个Topic（Topic列表或者Topic名称的正则）
+* 基于拉模式：Kafka中的消费是基于拉模式的，一个Topic分区的消息只会被所有订阅消费组中的一个消费者拉到
+* 支持正则：使用Topic的正则时新增的Topic会主动订阅
+* 消费方式互斥：集合订阅的方式subscribe（Collection）、正则表达式订阅的方式subscribe（Pattern）和指定分区的订阅方式 assign（Collection）分表代表了三种不同的订阅状态：AUTO_TOPICS、AUTO_PATTERN和USER_ASSIGNED（如果没有订阅，那么订阅状态为NONE）。然而这三种状态是互斥的，在一个消费者中只能使用其中的一种
+* 位移提交：默认的消费位移的提交方式是自动提交，默认的自动提交不是每消费一条消息就提交一次，而是定期提交，这个定期的周期时间由客户端参数auto.commit.interval.ms配置，默认值为5秒，此参数生效的前提是enable.auto.commit参数为true。
+* 新生消费者：每当消费者查找不到所记录的消费位移时，就会根据消费者客户端参数auto.offset.reset的配置来决定从何处开始进行消费，这个参数的默认值为“latest”，表示从分区末尾开始消费消息。
 
 
 
@@ -423,6 +471,10 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 * https://mercyblitz.github.io/2020/05/11/Apache-Dubbo-%E6%9C%8D%E5%8A%A1%E8%87%AA%E7%9C%81%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/
 * https://blog.csdn.net/alisystemsoftware/article/details/106615082
 * http://thesecretlivesofdata.com/raft/
+* 《深入理解Kafka：核心设计与实践原理》
+* https://www.cnblogs.com/qdhxhz/p/11167025.html
+* https://zhuanlan.zhihu.com/p/21994882
+* http://www.tianshouzhi.com/api/tutorials/distributed_transaction/388
 
 
 # 基础框架
