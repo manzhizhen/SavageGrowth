@@ -197,6 +197,9 @@
 * 《Spring实战（第5版）》
 * https://www.reactivemanifesto.org/
 * https://www.reactive-streams.org/
+* https://github.com/reactor/reactor-core
+* https://github.com/reactor/lite-rx-api-hands-on
+* https://projectreactor.io/docs/core/release/reference/index.html#about-doc
 
 # 云原生
 ## 定义
