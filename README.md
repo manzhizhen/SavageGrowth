@@ -393,6 +393,7 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 # 分布式系统
 
 ## 常见的一致性算法
+the three most popular consistency levels are eventual, read-your-writes, and strong. 
 ### 2PC&3PC
 **2PC**<br />
 **角色**：事务参与方、事务协调者<br />
@@ -424,6 +425,9 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 
 ### Gossip
 ### ZAB
+
+### 参考资料
+* https://engineering.fb.com/2021/08/06/core-data/zippydb/
 
 ## ZooKeeper
 定义：ZooKeeper是一个分布式协作框架，用于维护配置信息，命名，提供分布式同步以及提供组服务。
