@@ -210,6 +210,7 @@
 
 # 云原生
 ## 定义
+云原生是一种应用程序开发风格，它鼓励在持续交付和价值驱动的开发领域采用最佳实践。一个相关的学科是构建12要素应用程序，其中开发实践与交付和运营目标保持一致
 云原生技术有利于各组织在公有云、私有云和混合云等新型动态环境中，构建和运行可弹性扩展的应用。
 云原生的代表技术包括容器、服务网格、微服务、不可变基础设施和声明式API。这些技术能够构建容错性好、易于管理和便于观察的松耦合系统。结合可靠的自动化手段，云原生技术使工程师能够轻松地对系统作出频繁和可预测的重大变更。
 云原生计算基金会（CNCF）致力于培育和维护一个厂商中立的开源生态系统，来推广云原生技术。我们通过将最前沿的模式民主化，让这些创新为大众所用。
@@ -217,6 +218,9 @@
 **参考资料：**
 * https://github.com/cncf/toc/blob/master/DEFINITION.md
 * https://jimmysong.io/kubernetes-handbook/cloud-native/cloud-native-definition.html
+* https://docs.spring.io/spring-cloud-commons/docs/current/reference/html/
+* https://tanzu.vmware.com/content/ebooks/migrating-to-cloud-native-application-architectures
+* https://12factor.net/
 
 ## Docker
 定义：Docker是一个Go语言开源的应用容器引擎。Docker可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的Linux机器上，也可以实现虚拟化。
