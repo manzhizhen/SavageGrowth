@@ -428,10 +428,18 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 ### Raft
 
 ### Gossip
+
+
 ### ZAB
 
 ### 参考资料
 * https://engineering.fb.com/2021/08/06/core-data/zippydb/
+* https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf
+* https://www.serf.io/docs/internals/gossip.html
+* https://www.consul.io/docs/architecture/consensus
+* http://publicatio.bibl.u-szeged.hu/1529/1/gossip11.pdf
+* https://cloud.tencent.com/developer/article/1662426
+* https://raft.github.io/raft.pdf
 
 ## ZooKeeper
 定义：ZooKeeper是一个分布式协作框架，用于维护配置信息，命名，提供分布式同步以及提供组服务。
