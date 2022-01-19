@@ -33,6 +33,7 @@
         - [Raft](#Raft)
         - [Gossip](#Gossip)
         - [ZAB](#ZAB)
+        - [为什么要选主](#为什么要选主)
     - [RPC框架](#RPC框架)
         - [Apache Dubbo](#Dubbo)
     - [ZooKeeper](#ZooKeeper)
@@ -442,6 +443,9 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 
 
 ### ZAB
+
+### 为什么要选主
+可以运行 Paxos 以就序列中的每个写操作达成一致。但是，每次运行 Paxos 可能会很昂贵。Zab 和 Raft 所做的是他们使用类似 Paxos 的算法来选举领导者。然后领导者决定事件的写操作（及其顺序）应该是什么。
 
 ### 参考资料
 * https://engineering.fb.com/2021/08/06/core-data/zippydb/
