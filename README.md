@@ -289,7 +289,10 @@ Serverless利用现代云计算功能和抽象的优势，让您专注于业务�
 ## RDS
 
 ### MySQL
-**MGR**<br />
+#### 架构
+<img width="1070" alt="MySQL架构图" src="https://user-images.githubusercontent.com/6687462/159244881-02febb00-320a-4aa9-9f43-653c7602ab3b.png">
+
+#### MGR
 即MySQL Group Replication，是官方提供的MySQL高可用解决方案。我们知道创建容错系统的常见方式是使组件冗余，对于MySQL而言，最终的挑战是将数据复制的逻辑与多个服务器以一致且简单的方式进行协调的逻辑相融合。换句话说，要让多个服务器就系统的状态以及系统所经历的每一次更改的数据达成一致。<br />
 MGR为分布式状态机复制提供了服务器之间的强大协调能力，当服务器属于同一组时，它们会自动进行协调。该组可以在具有自动选主（单主）的模式下运行，仅一个服务器接受更新。对于更高级的用户，可以在多主模式下部署，在该模式下，所有服务器都可以接受更新，这种能力的代价是应用程序必须解决此类部署所施加的限制。<br />
 所有这些均由组通信系统（Group Communication System，即GCS）协议提供支持，它提供故障检测机制，组成员安全且有序的传递消息，该技术的核心是Paxos算法的实现。
@@ -302,12 +305,12 @@ MySQL异步复制：MySQL提供了两种异步复制机制，一种是“异步�
 MGR:<br />
 ![MGR](https://user-images.githubusercontent.com/6687462/86524273-20f78980-beab-11ea-9fa9-af6e9bb94acf.png)<br />
 
-**binlog、redolog、undolog**<br />
-binlog：MySQL Server层记录的归档日志，Base64编码的二进制格式，用于恢复数据和复本同步。binlog采用的是顺序追加写。<br />
-redolog：InnoDB存储引擎层的重做日志，确保事务的持久性。防止在发生故障的时间点，尚有脏页未写入磁盘，在重启MySQL服务的时候，根据redolog进行重做，从而保证事务的持久性。redolog采用的是循环写，即固定文件大小，如果写到文件末尾，又从头写。<br />
-undolog：InnoDB存储引擎层的回滚日志，保存了事务发生之前的数据的一个版本，用于事务的回滚。<br />
+#### binlog、redolog、undolog
+**binlog**：MySQL Server层记录的归档日志，Base64编码的二进制格式，用于恢复数据和复本同步。binlog采用的是顺序追加写。<br />
+**redolog**：InnoDB存储引擎层的重做日志，确保事务的持久性。防止在发生故障的时间点，尚有脏页未写入磁盘，在重启MySQL服务的时候，根据redolog进行重做，从而保证事务的持久性。redolog采用的是循环写，即固定文件大小，如果写到文件末尾，又从头写。<br />
+**undolog**：InnoDB存储引擎层的回滚日志，保存了事务发生之前的数据的一个版本，用于事务的回滚。<br />
 
-**参考资料：**<br />
+#### 参考资料
 * https://dev.mysql.com/doc/refman/8.0/en/group-replication.html
 * https://dev.mysql.com/doc/refman/8.0/en/binlog.html
 
