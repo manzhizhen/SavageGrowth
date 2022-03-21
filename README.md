@@ -218,6 +218,7 @@
 
 ## 云计算服务
 凡是用户无需下载其他软件而是直接通过互联网就能访问的所有基础架构、平台、软件或技术都可以视为云计算，包括以下即服务类解决方案：IaaS、PaaS、SaaS和FaaS。
+![云计算解决方案（英文）](https://user-images.githubusercontent.com/6687462/159231947-f47f50e3-b8a7-4837-9b6d-9ed63117d640.png)
 
 ### PaaS
 ClickPaaS(https://www.clickpaas.com/) 更快速、更高效、更敏捷成为当下数字化变革的必要条件。
