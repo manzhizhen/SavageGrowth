@@ -27,8 +27,10 @@
     - [NoSQL](#NoSQL)
         - [Redis](#Redis)
 - [分布式系统](#分布式系统)
-    - [常见的一致性算法](#常见的一致性算法)
+    - [常见的一致性算法（共识算法）](#常见的一致性算法（共识算法）)
         - [2PC&3PC](#2PC&3PC)
+        - [TCC](#TCC)
+        - [Saga](#Saga)
         - [Paxos](#Paxos)
         - [Raft](#Raft)
         - [Gossip](#Gossip)
@@ -466,8 +468,9 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 
 # 分布式系统
 
-## 常见的一致性算法
-the three most popular consistency levels are eventual, read-your-writes, and strong. 
+## 常见的一致性算法（共识算法）
+The three most popular consistency levels are eventual, read-your-writes, and strong.
+三个最流行的一致性级别是最终一致性、写后读 和 强一致性。
 ### 2PC&3PC
 **2PC**<br />
 角色：事务参与方、事务协调者<br />
@@ -497,7 +500,13 @@ Three-phaseCommit：第一阶段——CanCommit、第二阶段——PreCommit、
 优点：<br />
 缺点：<br />
 
-### TCC（Try-Confirm-Cancel）
+### TCC
+即 Try-Confirm-Cancel，TCC是应用层的2PC(2 Phase Commit, 两阶段提交)，如果你将应用看做资源管理器的话。一般来说需要业务系统实现try、confirm 和 cancel 三个接口。
+
+### Saga
+Saga 是一种补偿协议，在 Saga 模式下，分布式事务内有多个参与者，每一个参与者都是一个冲正补偿服务，需要用户根据业务场景实现其正向操作和逆向回滚操作。
+分布式事务执行过程中，依次执行各参与者的正向操作，如果所有正向操作均执行成功，那么分布式事务提交。如果任何一个正向操作执行失败，那么分布式事务会退回去执行前面各参与者的逆向回滚操作，回滚已提交的参与者，使分布式事务回到初始状态。
+Saga 理论出自 Hector & Kenneth 1987发表的论文 Sagas。 Saga 正向服务与补偿服务也需要业务开发者实现。
 
 ### Paxos
 Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于消息传递的一致性算法，其解决的问题是分布式系统如何就某个值(决议)达成一致。
@@ -522,6 +531,7 @@ Gossip protocol 也叫 Epidemic Protocol （流行病协议），是基于流行
 可以运行 Paxos 以就序列中的每个写操作达成一致。但是，每次运行 Paxos 可能会很昂贵。Zab 和 Raft 所做的是他们使用类似 Paxos 的算法来选举领导者。然后领导者决定事件的写操作（及其顺序）应该是什么。
 
 ### 参考资料
+* https://jepsen.io/consistency/models/read-your-writes
 * https://engineering.fb.com/2021/08/06/core-data/zippydb/
 * https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf
 * https://www.serf.io/docs/internals/gossip.html
@@ -532,6 +542,7 @@ Gossip protocol 也叫 Epidemic Protocol （流行病协议），是基于流行
 * https://zhuanlan.zhihu.com/p/35298019
 * https://zhuanlan.zhihu.com/p/32052223
 * https://www.jianshu.com/p/a4b2507051ef
+* https://www.sofastack.tech/blog/sofa-meetup-3-seata-retrospect/
 
 ## ZooKeeper
 定义：ZooKeeper是一个分布式协作框架，用于维护配置信息，命名，提供分布式同步以及提供组服务。
@@ -591,7 +602,6 @@ DevOps是一组用于促进开发和运维人员之间协作以达到缩短软�
 * https://www.cnblogs.com/qdhxhz/p/11167025.html
 * https://zhuanlan.zhihu.com/p/21994882
 * http://www.tianshouzhi.com/api/tutorials/distributed_transaction/388
-
 
 
 # 基础框架
