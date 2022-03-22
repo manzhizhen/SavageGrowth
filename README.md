@@ -472,6 +472,9 @@ the three most popular consistency levels are eventual, read-your-writes, and st
 **2PC**<br />
 **角色**：事务参与方、事务协调者<br />
 **Two-phaseCommit**：第一阶段——准备阶段(投票阶段)、第二阶段——提交阶段（执行阶段）。<br />
+![2PC成功](https://user-images.githubusercontent.com/6687462/159493054-d400a20f-fc6a-4bfb-ab30-f2c95dffc13d.jpg) <br />
+![2PC失败](https://user-images.githubusercontent.com/6687462/159493070-63c50692-5924-46e0-99cd-ca17bfbc8581.jpg) <br />
+![2PC卡死](https://user-images.githubusercontent.com/6687462/159493079-0b6d4ace-74c5-4e47-be8a-84e22d1d8ae9.jpg) <br />
 **优点**：<br />
 
 **缺点**：<br />
@@ -487,6 +490,8 @@ the three most popular consistency levels are eventual, read-your-writes, and st
 1、引入超时机制。同时在协调者和参与者中都引入超时机制。
 2、在第一阶段和第二阶段中插入一个准备阶段。保证了在最后提交阶段之前各参与节点的状态是一致的。
 ![3PC](https://user-images.githubusercontent.com/6687462/123544788-71848880-d787-11eb-9995-16956d31d416.png)
+![3PC成功](https://user-images.githubusercontent.com/6687462/159493096-ac7b6f74-060f-4d5e-af57-aa1ddd4dca54.jpg)
+![3PC失去共识](https://user-images.githubusercontent.com/6687462/159493108-d6dc6184-43ad-4e70-abab-d8ef7f3e0663.jpg)
 **优点**：<br />
 **缺点**：<br />
 
@@ -513,6 +518,7 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 * http://publicatio.bibl.u-szeged.hu/1529/1/gossip11.pdf
 * https://cloud.tencent.com/developer/article/1662426
 * https://raft.github.io/raft.pdf
+* https://zhuanlan.zhihu.com/p/35298019
 
 ## ZooKeeper
 定义：ZooKeeper是一个分布式协作框架，用于维护配置信息，命名，提供分布式同步以及提供组服务。
