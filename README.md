@@ -621,10 +621,33 @@ Spring中另一个核心接口是ApplicationContext，它是BeanFactory的子接
 
 简而言之，BeanFactory提供了配置框架和基本功能，并ApplicationContext增加了更多针对企业的功能。
 
-**IoC**
+### BeanFactory遵守的初始化方法顺序
+Bean factory implementations should support the standard bean lifecycle interfaces as far as possible. The full set of initialization methods and their standard order is:
+1. BeanNameAware's setBeanName
+2. BeanClassLoaderAware's setBeanClassLoader
+3. BeanFactoryAware's setBeanFactory
+4. EnvironmentAware's setEnvironment
+5. EmbeddedValueResolverAware's setEmbeddedValueResolver
+6. ResourceLoaderAware's setResourceLoader (only applicable when running in an application context)
+7. ApplicationEventPublisherAware's setApplicationEventPublisher (only applicable when running in an application context)
+8. MessageSourceAware's setMessageSource (only applicable when running in an application context)
+9. ApplicationContextAware's setApplicationContext (only applicable when running in an application context)
+10. ServletContextAware's setServletContext (only applicable when running in a web application context)
+11. postProcessBeforeInitialization methods of BeanPostProcessors
+12. InitializingBean's afterPropertiesSet
+13. a custom init-method definition
+14. postProcessAfterInitialization methods of BeanPostProcessors
+
+On shutdown of a bean factory, the following lifecycle methods apply:
+1. postProcessBeforeDestruction methods of DestructionAwareBeanPostProcessors
+2. DisposableBean's destroy
+3. a custom destroy-method definition
+
+
+### IoC
 org.springframework.beans和org.springframework.context包是Spring框架的IoC容器的基础。
 
-**AOP**
+### AOP
 Spring通过使用基于Schema的方法或@AspectJ注释样式，提供了编写自定义方面的简单而强大的方式。<br />
 **AOP核心概念**<br />
 切面（Aspect）：横跨多个类的关注点的模块化<br />
