@@ -373,7 +373,7 @@ AOF：会记录服务器接收的每个写入操作，这些操作将在服务�
 #### 高可用
 Redis官方提供的高可用方案分为Redis Sentinel和Redis Cluster两种。<br/>
 **Redis Sentinel**<br/>
-这是宏观上Sentinel功能的完整列表（即，大图）：
+这是宏观上Sentinel功能的完整列表：
 * 监控。Sentinel会不断检查您的主实例和副本实例是否按预期工作。
 * 通知。Sentinel可以通过API通知系统管理员或其他计算机程序，其中一个受监视的Redis实例出了问题。
 * 自动故障转移。如果主服务器未按预期工作，则Sentinel可以启动故障转移过程，在该过程中将副本升级为主服务器，将其他附加副本重新配置为使用新的主服务器，并通知使用Redis服务器的应用程序要使用的新地址。连接时。
@@ -383,6 +383,8 @@ Redis官方提供的高可用方案分为Redis Sentinel和Redis Cluster两种。
 2. 即使不是所有的Sentinel进程都在工作，Sentinel仍能正常工作，从而使系统能够应对故障。毕竟，拥有故障转移系统本身就是一个单点故障，这没有任何意思。
 3. 一个健壮的部署至少需要三个Sentinel实例。
 4. Sentinels，Redis实例（主服务器和副本）以及连接到Sentinel和Redis的客户端的总和也是具有特定属性的大型分布式系统。
+
+![Redis哨兵](https://user-images.githubusercontent.com/6687462/159384118-9c7b5054-2dc0-4e72-93f3-efea36cbf0a0.png)
 
 **Redis Cluster**<br/>
 Redis Cluster 提供了一种运行 Redis 的方法，其中数据 自动分片到多个 Redis 节点。Redis Cluster 还在分区期间提供了一定程度的可用性，即在某些节点发生故障或无法通信时继续操作的能力。但是，如果发生较大故障（例如，当大多数主服务器不可用时），集群将停止运行。
@@ -410,6 +412,8 @@ Redis Cluster 支持多个 key 操作，只要涉及到单个命令执行（或�
 Z1 仍然能够写入 B，B 将接受其写入。如果分区在很短的时间内恢复，集群将继续正常运行。但是，如果分区持续了足够的时间让 B1 在分区的大多数端被提升为主控，那么 Z1 在此期间发送给 B 的写入将丢失。
 请注意，Z1 能够发送到 B 的写入量有一个*最大窗口*：如果分区的多数方经过足够的时间来选举副本作为主节点，则少数方的每个主节点都将停止接受写入。 这个时间量是 Redis Cluster 的一个非常重要的配置指令，称为**节点超时**。
 节点超时后，主节点被认为发生故障，并且可以由其副本之一替换。类似地，在节点超时后没有主节点能够感知其他主节点的大多数，它进入错误状态并停止接受写入。
+
+![RedisCluster](https://user-images.githubusercontent.com/6687462/159384112-53f1129b-3755-463d-bfa1-e0214ae05d5c.png)
 
 **分布式锁:**<br/>
 有许多库和博客文章描述了如何使用Redis实现DLM（Distributed Lock Manager 分布式锁管理器），但每个库都使用不同的方法，与使用稍微复杂一点的方法相比，许多库使用的方法具有较低的保证设计。
@@ -443,6 +447,7 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 * https://redis.io/
 * https://redis.io/topics/distlock
 * https://redis.io/topics/cluster-tutorial
+* https://blog.tienyulin.com/redis-master-slave-replication-sentinel-cluster/
 * http://doc.redisfans.com/
 * https://www.elastic.co/cn/elasticsearch/
 * https://github.com/elastic/elasticsearch
