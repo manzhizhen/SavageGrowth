@@ -488,6 +488,7 @@ Three-phaseCommit：第一阶段——CanCommit、第二阶段——PreCommit、
 ![3PC](https://user-images.githubusercontent.com/6687462/123544788-71848880-d787-11eb-9995-16956d31d416.png)
 ![3PC成功](https://user-images.githubusercontent.com/6687462/159493096-ac7b6f74-060f-4d5e-af57-aa1ddd4dca54.jpg)
 ![3PC失去共识](https://user-images.githubusercontent.com/6687462/159493108-d6dc6184-43ad-4e70-abab-d8ef7f3e0663.jpg)
+
 **和2PC区别**：
 3PC主要是为了解决两阶段提交协议的阻塞问题，2PC存在的问题是当协作者崩溃时，参与者不能做出最后的选择（因为参与者不知道其他参与者CanCommit的结果），因此参与者可能在协作者恢复之前保持阻塞。
 1、引入超时机制。同时在协调者和参与者中都引入超时机制。
@@ -502,9 +503,18 @@ Three-phaseCommit：第一阶段——CanCommit、第二阶段——PreCommit、
 Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于消息传递的一致性算法，其解决的问题是分布式系统如何就某个值(决议)达成一致。
 
 ### Raft
+不同于Paxos算法直接从分布式一致性问题出发推导出来，Raft算法则是从多副本状态机的角度提出，用于管理多副本状态机的日志复制。Raft实现了和Paxos相同的功能，它将一致性分解为多个子问题：Leader选举（Leader election）、日志同步（Log replication）、安全性（Safety）、日志压缩（Log compaction）、成员变更（Membership change）等。
+同时，Raft算法使用了更强的假设来减少了需要考虑的状态，使之变的易于理解和实现。
+
+Raft将系统中的角色分为领导者（Leader）、跟从者（Follower）和候选人（Candidate）：
+* Leader：接受客户端请求，并向Follower同步请求日志，当日志同步到大多数节点上后告诉Follower提交日志。
+* Follower：接受并持久化Leader同步的日志，在Leader告之日志可以提交之后，提交日志。
+* Candidate：Leader选举过程中的临时角色。
+
+![Raft算法角色转换](https://user-images.githubusercontent.com/6687462/159512756-7d9a279f-7dfb-4dfb-8f04-889a365410f6.jpg)
 
 ### Gossip
-
+Gossip protocol 也叫 Epidemic Protocol （流行病协议），是基于流行病传播方式的节点或者进程之间信息交换的协议。。Gossip protocol在1987年8月由施乐公司帕洛阿尔托研究中心研究员艾伦·德默斯（Alan Demers）发表在ACM上的论文《Epidemic Algorithms for Replicated Database Maintenance》中被提出。
 
 ### ZAB
 
@@ -520,6 +530,8 @@ Paxos算法是莱斯利·兰伯特(Leslie Lamport)1990年提出的一种基于�
 * https://cloud.tencent.com/developer/article/1662426
 * https://raft.github.io/raft.pdf
 * https://zhuanlan.zhihu.com/p/35298019
+* https://zhuanlan.zhihu.com/p/32052223
+* https://www.jianshu.com/p/a4b2507051ef
 
 ## ZooKeeper
 定义：ZooKeeper是一个分布式协作框架，用于维护配置信息，命名，提供分布式同步以及提供组服务。
