@@ -681,6 +681,14 @@ Spring Boot使您可以外部化配置，以便可以在不同环境中使用相
 Netty 是一个用于快速开发可维护的高性能协议服务器和客户端的异步事件驱动的网络应用框架。
 ### 整体架构
 ![Netty架构](https://user-images.githubusercontent.com/6687462/159733729-4bc62d8c-1523-43dc-bf37-77ba4b4b1293.png)
+### 设计特点
+* 各种传输类型的统一API - 阻塞和非阻塞套接字
+* 基于灵活且可扩展的事件模型，允许明确分离关注点
+* 高度可定制的线程模型——单线程、一个或多个线程池，例如SEDA(即Staged Event-Driven Architecture，核心思想是把一个请求处理过程分成几个Stage，不同资源消耗的Stage使用不同数量的线程来处理，Stage间使用事件驱动的异步通信模式。)
+* 真正的无连接数据报套接字支持（自 3.1 起）
+### Netty的零拷贝
+Netty 支持零复制方法，通过ChannelBuffer“指向”所需的缓冲区，从而消除了执行复制的需要。
+![Netty的零拷贝](https://user-images.githubusercontent.com/6687462/159741687-ee0ae96d-00e0-4662-8425-3ae3af9b53e4.png)
 ### Netty5变化
 * 简化的处理程序类型层次结构：ChannelInboundHandler并ChannelOutboundHandler已合并为ChannelHandler。ChannelHandler
 现在具有入站和出站处理程序方法。ChannelInboundHandlerAdapter，ChannelOutboundHandlerAdapter和，ChannelDuplexHandlerAdapter已被弃用，并由代替ChannelHandlerAdapter。由于现在无法确定处理程序是入站处理程序还是出站处理程序，因此CombinedChannelDuplexHandler已被替换ChannelHandlerAppender。
@@ -699,6 +707,7 @@ Netty 是一个用于快速开发可维护的高性能协议服务器和客户�
 * https://netty.io/wiki/new-and-noteworthy-in-5.0.html
 * https://netty.io/wiki/new-and-noteworthy-in-4.1.html
 * https://netty.io/wiki/new-and-noteworthy-in-4.0.html
+* https://netty.io/3.8/guide/#architecture
 
 
 
