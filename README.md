@@ -679,6 +679,8 @@ Spring Boot使您可以外部化配置，以便可以在不同环境中使用相
 ## Netty
 ### 定义
 Netty 是一个用于快速开发可维护的高性能协议服务器和客户端的异步事件驱动的网络应用框架。
+### 整体架构
+![Netty架构](https://user-images.githubusercontent.com/6687462/159733729-4bc62d8c-1523-43dc-bf37-77ba4b4b1293.png)
 ### Netty5变化
 * 简化的处理程序类型层次结构：ChannelInboundHandler并ChannelOutboundHandler已合并为ChannelHandler。ChannelHandler
 现在具有入站和出站处理程序方法。ChannelInboundHandlerAdapter，ChannelOutboundHandlerAdapter和，ChannelDuplexHandlerAdapter已被弃用，并由代替ChannelHandlerAdapter。由于现在无法确定处理程序是入站处理程序还是出站处理程序，因此CombinedChannelDuplexHandler已被替换ChannelHandlerAppender。
