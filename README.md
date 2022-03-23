@@ -677,7 +677,9 @@ Spring Boot使您可以外部化配置，以便可以在不同环境中使用相
 注释（因为保证在添加任何用户定义的Bean定义后才会加载这些注释）。
 
 ## Netty
-**Netty5变化**
+### 定义
+Netty 是一个用于快速开发可维护的高性能协议服务器和客户端的异步事件驱动的网络应用框架。
+### Netty5变化
 * 简化的处理程序类型层次结构：ChannelInboundHandler并ChannelOutboundHandler已合并为ChannelHandler。ChannelHandler
 现在具有入站和出站处理程序方法。ChannelInboundHandlerAdapter，ChannelOutboundHandlerAdapter和，ChannelDuplexHandlerAdapter已被弃用，并由代替ChannelHandlerAdapter。由于现在无法确定处理程序是入站处理程序还是出站处理程序，因此CombinedChannelDuplexHandler已被替换ChannelHandlerAppender。
 * 更加灵活的线程模型：
