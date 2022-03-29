@@ -792,16 +792,16 @@ Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共
 4. 如果A happens-before B，且B happens-before C，那么A happens-before C。
 
 ## I/O
-**用户空间与内核空间**
+### 用户空间与内核空间
 针对 Linux 操作系统而言，最高的 1G 字节(从虚拟地址 0xC0000000 到 0xFFFFFFFF)由内核使用，称为内核空间。而较低的 3G 字节(从虚拟地址 0x00000000 到 0xBFFFFFFF)由各个进程使用，称为用户空间。
 在CPU的所有指令中，有些指令非常危险，如果错用，将导致系统崩溃，比如清内存、设置时钟等。如果允许所有的程序都可以使用这些指令，那么系统崩溃的概率将大大增加。
 所以，CPU将指令分为特权指令和非特权指令，对于那些危险的指令，只允许操作系统及其相关模块使用，普通应用程序只能使用那些不会造成灾难的指令。比如Intel的CPU将特权等级分为4个级别：Ring0~Ring3。
 其实Linux系统只使用了Ring0和Ring3 两个运行级别(Windows 系统也是一样的)。当进程运行在Ring3级别时被称为运行在用户态，而运行在Ring0级别时被称为运行在内核态。
 
-**用户态与内核态**
+### 用户态与内核态
 当进程运行在内核空间时就处于内核态，而进程运行在用户空间时则处于用户态。
 
-**Unix中5种I/O模型**
+### Unix中5种I/O模型
 * 阻塞式I/O
 * 非阻塞式I/O
 * I/O复用(select和poll)
@@ -815,11 +815,11 @@ Java线程之间的通信由Java内存模型控制，JMM决定一个线程对共
 ![阻塞IO模型](https://user-images.githubusercontent.com/6687462/87281887-45480b80-c526-11ea-80d2-e994498d99e8.png)
 
 **非阻塞式I/O**
-不导致请求进程阻塞：
+应用进程执行系统调用之后，内核返回一个错误码。应用进程可以继续执行，但是需要不断的执行系统调用来获知I/O是否完成，这种方式称为轮询(polling)。 由于CPU要处理更多的系统调用，因此这种模型是比较低效的。：
 ![非阻塞IO模型](https://user-images.githubusercontent.com/6687462/87282513-edf66b00-c526-11ea-863b-56e0a5a9e885.png)
 
 **I/O复用**
-I/O multiplexing这里面的multiplexing指在单个线程通过记录跟踪每一个Socket(I/O流)的状态来同时管理多个I/O流. 
+I/O multiplexing这里面的multiplexing指在单个线程通过记录跟踪每一个Socket(I/O流)的状态来同时管理多个I/O流。使用select或者poll等待数据，并且可以等待多个套接字中的任何一个变为可读，这一过程会被阻塞，当某一个套接字可读时返回。之后再使用recvfrom把数据从内核复制到进程中。如果一个Web服务器没有I/O复用，那么每一个Socket连接都需要创建一个线程去处理。如果同时有几万个连接，那么就需要创建相同数量的线程。并且相比于多进程和多线程技术，I/O 复用不需要进程线程创建和切换的开销，系统开销更小。
 ![IO多路复用](https://user-images.githubusercontent.com/6687462/87282705-20a06380-c527-11ea-9691-13172894e4c6.png)
 
 **信号驱动式I/O**
@@ -854,6 +854,7 @@ select，poll，epoll都是IO多路复用的机制。I/O多路复用就通过一
 * 《Unix网络编程（卷一）》
 * https://www.tqwba.com/x_d/jishu/17958.html
 * https://www.cnblogs.com/aspirant/p/9166944.html
+* https://pdai.tech/md/java/io/java-io-model.html
 
 # 网络
 ## TCP
