@@ -861,6 +861,7 @@ select，poll，epoll都是IO多路复用的机制。I/O多路复用就通过一
 * https://www.tqwba.com/x_d/jishu/17958.html
 * https://www.cnblogs.com/aspirant/p/9166944.html
 * https://pdai.tech/md/java/io/java-io-model.html
+* https://segmentfault.com/a/1190000003063859
 
 # 网络
 ## TCP
