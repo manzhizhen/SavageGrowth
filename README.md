@@ -756,7 +756,7 @@ G1收集器的运作过程大致可划分为以下四个步骤：<br />
 
 ## Java引用
 Java里面分为强引用、软引用、弱引用、虚引用。<br />
-每个线程Thread对象中都保存着一个ThreadLocalMap实例，而ThreadLocalMap中有一个Entry的数组（private Entry[] table;），Entry中的key类型是WeakReference<ThreadLocal>而非ThreadLocal，这样做的目的是为了当我们不再使用该ThreadLocal时，哪怕运行中线程的ThreadLocalMap实例有该ThreadLocal的Entry，JVM也能在GC时将ThreadLocal回收。
+每个线程Thread对象中都保存着一个ThreadLocalMap实例，而ThreadLocalMap中有一个Entry的数组（private Entry[] table;），Entry中的key类型是WeakReference<ThreadLocal>而非ThreadLocal，这样做的目的是为了当我们不再使用或短时间不再使用该ThreadLocal时，哪怕运行中线程的ThreadLocalMap实例有该ThreadLocal的Entry，JVM也能在GC时将ThreadLocal回收，避免内存泄露。
 
 
 ## 多线程
