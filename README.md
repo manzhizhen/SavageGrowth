@@ -191,16 +191,18 @@
 * 重点评估方案的维护成本
 * 多套方案中选择最合适的方案
 
+**参考资料：**<br />
+* 《恰如其分的软件架构》
+* https://blog.christianposta.com/microservices/when-not-to-do-microservices/
+* 《Java设计模式（第2版）》
+* 《Spring实战（第5版）》
+
 ## 响应式编程(Reactive)
 在开发应用程序代码时，我们可以编写两种风格的代码，即命令式和反应式。
 * 命令式（Imperative）的代码：它由一组任务组成，每次只运行一项任务，每项任务又都依赖于前面的任务。我们一次一个地按照顺序将代码编写为需要遵循的指令列表。在某项任务开始执行之后，程序在开始下一项任务之前需要等待当前任务完成。在整个处理过程中的每一步，要处理的数据都必须是完全可用的，以便将它们作为一个整体进行处理。
 * 响应式（Reactive）的代码：它定义了一组用来处理数据的任务，但是这些任务可以并行地执行。每项任务处理数据的一部分子集，并将结果交给处理流程中的下一项任务，同时继续处理数据的另一部分子集。相对于要求将被处理的数据作为一个整体进行处理，响应式流可以在数据可用时立即开始处理。实际上，传入的数据可能是无限的（比如，一个某个地理位置的实时温度测量数据的恒定流）。
 
 **参考资料：**<br />
-* 《恰如其分的软件架构》
-* https://blog.christianposta.com/microservices/when-not-to-do-microservices/
-* 《Java设计模式（第2版）》
-* 《Spring实战（第5版）》
 * https://www.reactivemanifesto.org/
 * https://www.reactive-streams.org/
 * https://github.com/reactor/reactor-core
@@ -211,6 +213,8 @@
 * https://www.xncoding.com/2018/04/05/java/reactor.html
 * http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf
 * https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-concurrency-model
+* https://www.baeldung.com/spring-webflux-concurrency
+* https://piotrminkowski.com/2020/03/30/a-deep-dive-into-spring-webflux-threading-model/
 
 
 # 云
@@ -730,7 +734,25 @@ Netty 支持零复制方法，通过ChannelBuffer“指向”所需的缓冲区�
 混合收集（Mixed GC）：指目标是收集整个新生代以及部分老年代的垃圾收集。目前只有G1收集器会有这种行为。<br />
 整堆收集（Full GC）：收集整个Java堆和方法区的垃圾收集。<br />
 
-**CMS(Concurrent Mark Sweep)**
+### Serial（串行）收集器
+是最基本、发展历史最悠久的收集器，它是采用复制算法的新生代收集器，曾经（JDK 1.3.1之前）是虚拟机新生代收集的唯一选择。
+
+### ParNew收集器
+ParNew收集器就是Serial收集器的多线程版本，它也是一个新生代收集器。除了使用多线程进行垃圾收集外，其余行为包括Serial收集器可用的所有控制参数、收集算法（复制算法）、Stop The World、对象分配规则、回收策略等与Serial收集器完全相同，两者共用了相当多的代码。
+
+### Parallel Scavenge 收集器
+Parallel Scavenge收集器也是一个并行的多线程新生代收集器，它也使用复制算法。Parallel Scavenge收集器的特点是它的关注点与其他收集器不同，CMS等收集器的关注点是尽可能缩短垃圾收集时用户线程的停顿时间，而Parallel Scavenge收集器的目标是达到一个可控制的吞吐量（Throughput）。
+
+### Serial Old收集器
+Serial Old 是 Serial收集器的老年代版本，它同样是一个单线程收集器，使用“标记-整理”（Mark-Compact）算法。
+此收集器的主要意义也是在于给Client模式下的虚拟机使用。如果在Server模式下，它还有两大用途：
+* 在JDK1.5 以及之前版本（Parallel Old诞生以前）中与Parallel Scavenge收集器搭配使用。
+* 作为CMS收集器的后备预案，在并发收集发生Concurrent Mode Failure时使用。
+
+### Parallel Old收集器
+Parallel Old收集器是Parallel Scavenge收集器的老年代版本，使用多线程和“标记-整理”算法。前面已经提到过，这个收集器是在JDK 1.6中才开始提供的，在此之前，如果新生代选择了Parallel Scavenge收集器，老年代除了Serial Old以外别无选择，所以在Parallel Old诞生以后，“吞吐量优先”收集器终于有了比较名副其实的应用组合，在注重吞吐量以及CPU资源敏感的场合，都可以优先考虑Parallel Scavenge加Parallel Old收集器。
+
+### CMS(Concurrent Mark Sweep)
 1. 初始标记（CMS initial mark）：标记一下GC Roots能直接关联到的对象，速度很快，但会Stop The World。
 2. 并发标记（CMS concurrent mark）：从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时较长但是可以与用户线程一起并发运行；
 3. 重新标记（CMS remark）：为了修正并发标记期间，因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间通常会比初始标记阶段稍长，但也远比并发标记阶段的时间短，该阶段也会Stop The World；
@@ -745,12 +767,15 @@ G1收集器的运作过程大致可划分为以下四个步骤：<br />
 2. 并发标记（Concurrent Marking）：从GC Root开始对堆中对象进行可达性分析，递归扫描整个堆里的对象图，找出要回收的对象，这阶段耗时较长，但可与用户程序并发执行。当对象图扫描完成以后，还要重新处理SATB记录下的在并发时有引用变动的对象。
 3. 最终标记（Final Marking）：对用户线程做另一个短暂的暂停，用于处理并发阶段结束后仍遗留下来的最后那少量的SATB记录。
 4. 筛选回收（Live Data Counting and Evacuation）：负责更新Region的统计数据，对各个Region的回收价值和成本进行排序，根据用户所期望的停顿时间来制定回收计划，可以自由选择任意多个Region构成回收集，然后把决定回收的那一部分Region的存活对象复制到空的Region中，再清理掉整个旧Region的全部空间。这里的操作涉及存活对象的移动，是必须暂停用户线程，由多条收集器线程并行完成的。
-  
+
+**参考资料：**
+* https://cloud.tencent.com/developer/article/1592943
+
 ## 类加载的过程
 分为加载、验证、准备、解析和初始化这五个阶段.
   
 **参考资料：**
-深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）
+* 深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）
 
 # Java&操作系统基础
 
