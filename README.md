@@ -556,6 +556,57 @@ Gossip protocol 也叫 Epidemic Protocol （流行病协议），是基于流行
 ## RPC框架
 ### Dubbo
 
+#### 部署架构
+作为一个微服务框架，Dubbo sdk 跟随着微服务组件被部署在分布式集群各个位置，为了在分布式环境下实现各个微服务组件间的协作， Dubbo 定义了一些中心化组件，这包括：
+
+* 注册中心。协调 Consumer 与 Provider 之间的地址注册与发现
+* 配置中心。
+  * 存储 Dubbo 启动阶段的全局配置，保证配置的跨环境共享与全局一致性
+  * 负责服务治理规则（路由规则、动态配置等）的存储与推送。
+* 元数据中心。
+  * 接收 Provider 上报的服务接口元数据，为 Admin 等控制台提供运维能力（如服务测试、接口文档等）
+  * 作为服务发现机制的补充，提供额外的接口/方法级别配置信息的同步能力，相当于注册中心的额外扩展
+
+![Dubbo部署架构](https://user-images.githubusercontent.com/6687462/161994112-31ff3416-d1f8-4693-9c6b-32b2174186d4.png)
+
+#### 服务发现
+就使用方式上而言，Dubbo3 与 Dubbo2 的服务发现配置是完全一致的，不需要改动什么内容。但就实现原理上而言，Dubbo3 引入了全新的服务发现模型 - 应用级服务发现， 在工作原理、数据格式上已完全不能兼容老版本服务发现。
+
+* Dubbo3 应用级服务发现，以应用粒度组织地址数据
+* Dubbo2 接口级服务发现，以接口粒度组织地址数据
+
+Dubbo3 格式的 Provider 地址不能被 Dubbo2 的 Consumer 识别到，反之 Dubbo2 的消费者也不能订阅到 Dubbo3 Provider。
+
+概括来说，Dubbo3 引入的应用级服务发现主要有以下优势：
+* 适配云原生微服务变革。云原生时代的基础设施能力不断向上释放，像 Kubernetes 等平台都集成了微服务概念抽象，Dubbo3 的应用级服务发现是适配各种微服务体系的通用模型。
+* 提升性能与可伸缩性。支持超大规模集群的服务治理一直以来都是 Dubbo 的优势，通过引入应用级服务发现模型，从本质上解决了注册中心地址数据的存储与推送压力，相应的 Consumer 侧的地址计算压力也成数量级下降；集群规模也开始变得可预测、可评估（与 RPC 接口数量无关，只与实例部署规模相关）。
+
+#### RPC通信协议
+Dubbo3 提供了 Triple(Dubbo3)、Dubbo2 协议，这是 Dubbo 框架的原生协议。除此之外，Dubbo3 也对众多第三方协议进行了集成，并将它们纳入 Dubbo 的编程与服务治理体系， 包括 gRPC、Thrift、JsonRPC、Hessian2、REST 等。以下重点介绍 Triple 与 Dubbo2 协议。
+RPC 协议的设计需要考虑以下内容：
+* 通用性： 统一的二进制格式，跨语言、跨平台、多传输层协议支持
+* 扩展性： 协议增加字段、升级、支持用户扩展和附加业务元数据
+* 性能：As fast as it can be
+* 穿透性：能够被各种终端设备识别和转发：网关、代理服务器等 通用性和高性能通常无法同时达到，需要协议设计者进行一定的取舍。
+
+最终我们选择了兼容 gRPC ，以 HTTP2 作为传输层构建新的协议，也就是 Triple。
+
+容器化应用程序和微服务的兴起促进了针对负载内容优化技术的发展。 客户端中使用的传统通信协议（ RESTFUL或其他基于 HTTP 的自定义协议）难以满足应用在性能、可维护性、扩展性、安全性等方便的需求。一个跨语言、模块化的协议会逐渐成为新的应用开发协议标准。自从 2017 年 gRPC 协议成为 CNCF 的项目后，包括 k8s、etcd 等越来越多的基础设施和业务都开始使用 gRPC 的生态，作为云原生的微服务化框架， Dubbo 的新协议也完美兼容了 gRPC。并且，对于 gRPC 协议中一些不完善的部分， Triple 也将进行增强和补充。
+
+那么，Triple 协议是否解决了上面我们提到的一系列问题呢？
+
+* 性能上: Triple 协议采取了 metadata 和 payload 分离的策略，这样就可以避免中间设备，如网关进行 payload 的解析和反序列化，从而降低响应时间。
+* 路由支持上，由于 metadata 支持用户添加自定义 header ，用户可以根据 header 更方便的划分集群或者进行路由，这样发布的时候切流灰度或容灾都有了更高的灵活性。
+* 安全性上，支持双向TLS认证（mTLS）等加密传输能力。
+* 易用性上，Triple 除了支持原生 gRPC 所推荐的 Protobuf 序列化外，使用通用的方式支持了 Hessian / JSON 等其他序列化，能让用户更方便的升级到 Triple 协议。对原有的 Dubbo 服务而言，修改或增加 Triple 协议 只需要在声明服务的代码块添加一行协议配置即可，改造成本几乎为 0。
+
+
+
+**参考资料**<br />
+* https://dubbo.apache.org/zh/docs/
+* https://dubbo.apache.org/zh/docs/concepts/registry-configcenter-metadata/
+* https://dubbo.apache.org/zh/docs/migration/migration-service-discovery/
+
 ## MQ
 
 ### Kafka
@@ -576,7 +627,7 @@ Kafka被设计为能够作为一个统一平台来处理大量或实时数据的
 * 位移提交：默认的消费位移的提交方式是自动提交，默认的自动提交不是每消费一条消息就提交一次，而是定期提交，这个定期的周期时间由客户端参数auto.commit.interval.ms配置，默认值为5秒，此参数生效的前提是enable.auto.commit参数为true。
 * 新生消费者：每当消费者查找不到所记录的消费位移时，就会根据消费者客户端参数auto.offset.reset的配置来决定从何处开始进行消费，这个参数的默认值为“latest”，表示从分区末尾开始消费消息。
 
-#### 参考资料
+**参考资料**<br />
 * https://kafka.apache.org/documentation/#design
 * https://queue.acm.org/detail.cfm?id=1563874
 
