@@ -333,7 +333,25 @@ Redis是一种采用内存来作为数据结构存储的数据库、缓存和消
 Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如Linux，* BSD，OS X，而无需外部依赖。Linux和OS X是Redis开发和测试最多的两个操作系统，我们建议使用Linux进行部署。<br/>
 
 #### 内部数据结构
-简单动态字符串(Simple Dynamic Strings, SDS)、双端链表、跳跃表(skiplist)、压缩列表、快速列表(Redis3.2引入，quicklist)、字典(散列表)、整数集合(intset)
+简单动态字符串(Simple Dynamic Strings, SDS)、双端链表、跳跃表(skiplist)、压缩列表、快速列表(Redis3.2引入，quicklist)、字典(散列表)、整数集合(intset)。
+* 跳跃表：
+考虑一个有序表
+
+![redis跳跃表1](https://user-images.githubusercontent.com/6687462/162159457-d64d7b92-5ad1-40d0-a10d-7a3c7a74e3ec.png)
+
+从该有序表中搜索元素 < 23, 43, 59 > ，需要比较的次数分别为 < 2, 4, 6 >，总共比较的次数
+为 2 + 4 + 6 = 12 次。有没有优化的算法吗? 链表是有序的，但不能使用二分查找。类似二叉
+搜索树，我们把一些节点提取出来，作为索引。得到如下结构：
+
+![redis跳跃表2](https://user-images.githubusercontent.com/6687462/162159488-56f245cf-06b6-44de-84b3-9e884cfb4e37.jpg)
+
+这里我们把 < 14, 34, 50, 72 > 提取出来作为一级索引，这样搜索的时候就可以减少比较次数了。
+我们还可以再从一级索引提取一些元素出来，作为二级索引，变成如下结构：
+
+![redis跳跃表3](https://user-images.githubusercontent.com/6687462/162159508-f8d30a4c-a725-4100-b4a9-2ae24309885c.jpg)
+
+这里元素不多，体现不出优势，如果元素足够多，这种索引结构就能体现出优势来了。
+
 
 #### 支持的数据结构
 字符串，哈希，列表，集合，带范围查询的排序集合，位图，HyperLogLog，地理空间索引。<br/>
@@ -449,6 +467,19 @@ antirez提出的**Redlock**算法大概是这样的：
 4. 如果取到了锁，key的真正有效时间等于有效时间减去获取锁所使用的时间（步骤3计算的结果）。
 5. 如果因为某些原因，获取锁失败（没有在至少N/2+1个Redis实例取到锁或者取锁时间已经超过了有效时间），客户端应该在所有的Redis实例上进行解锁（即便某些Redis实例根本就没有加锁成功，防止某些节点获取到锁但是客户端没有得到响应而导致接下来的一段时间不能被重新获取锁）。
 
+**参考资料**
+* https://www.jianshu.com/p/c2841d65df4c
+* https://redis.io/
+* https://redis.io/topics/distlock
+* https://redis.io/topics/cluster-tutorial
+* https://www.jianshu.com/p/7e47a4503b87
+* https://blog.tienyulin.com/redis-master-slave-replication-sentinel-cluster/
+* http://doc.redisfans.com/
+* https://www.elastic.co/cn/elasticsearch/
+* https://github.com/elastic/elasticsearch
+* https://redis.io/topics/faq
+* https://www.cnblogs.com/madashu/p/12832766.html
+
 ### Elasticsearch
 **定义**<br />
 Elasticsearch是一个分布式、RESTful风格的搜索和数据分析引擎。<br />
@@ -461,16 +492,7 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 **扩展知识点：** HyperLogLog<br />
 
 **参考资料：** 
-* https://redis.io/
-* https://redis.io/topics/distlock
-* https://redis.io/topics/cluster-tutorial
-* https://www.jianshu.com/p/7e47a4503b87
-* https://blog.tienyulin.com/redis-master-slave-replication-sentinel-cluster/
-* http://doc.redisfans.com/
-* https://www.elastic.co/cn/elasticsearch/
-* https://github.com/elastic/elasticsearch
-* https://redis.io/topics/faq
-* https://www.cnblogs.com/madashu/p/12832766.html
+
 
 # 分布式系统
 
