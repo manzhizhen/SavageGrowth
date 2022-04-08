@@ -498,6 +498,8 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 The three most popular consistency levels are eventual, read-your-writes, and strong.
 三个最流行的一致性级别是最终一致性、写后读 和 强一致性。
 ### 2PC&3PC
+X/Open 组织（即现在的 Open Group ）定义了分布式事务处理模型。 X/Open DTP 模型（ 1994 ）包括应用程序（ AP ）、事务管理器（ TM ）、资源管理器（ RM ）、通信资源管理器（ CRM ）四部分。一般，常见的事务管理器（ TM ）是交易中间件，常见的资源管理器（ RM ）是数据库，常见的通信资源管理器（ CRM ）是消息中间件。
+XA 就是 X/Open DTP 定义的交易中间件与数据库之间的接口规范（即接口函数），交易中间件用它来通知数据库事务的开始、结束以及提交、回滚等。 XA 接口函数由数据库厂商提供。
 **2PC**<br />
 角色：事务参与方、事务协调者<br />
 Two-phaseCommit：第一阶段——准备阶段(投票阶段)、第二阶段——提交阶段（执行阶段）。<br />
@@ -569,6 +571,7 @@ Gossip protocol 也叫 Epidemic Protocol （流行病协议），是基于流行
 * https://zhuanlan.zhihu.com/p/32052223
 * https://www.jianshu.com/p/a4b2507051ef
 * https://www.sofastack.tech/blog/sofa-meetup-3-seata-retrospect/
+* https://cache.one/read/14973079
 
 ## ZooKeeper
 定义：ZooKeeper是一个分布式协作框架，用于维护配置信息，命名，提供分布式同步以及提供组服务。
@@ -804,6 +807,8 @@ Netty 支持零复制方法，通过ChannelBuffer“指向”所需的缓冲区�
 老年代收集（Major GC/Old GC）：指目标只是老年代的垃圾收集。目前只有CMS收集器会有单独收集老年代的行为。另外请注意“Major GC”这个说法现在有点混淆，在不同资料上常有不同所指，读者需按上下文区分到底是指老年代的收集还是整堆收集。<br />
 混合收集（Mixed GC）：指目标是收集整个新生代以及部分老年代的垃圾收集。目前只有G1收集器会有这种行为。<br />
 整堆收集（Full GC）：收集整个Java堆和方法区的垃圾收集。<br />
+
+![JVM垃圾收集器](https://user-images.githubusercontent.com/6687462/162468976-2048a597-0c5a-45e3-a872-ae005a882ab0.jpeg)
 
 ### Serial（串行）收集器
 是最基本、发展历史最悠久的收集器，它是采用复制算法的新生代收集器，曾经（JDK 1.3.1之前）是虚拟机新生代收集的唯一选择。
