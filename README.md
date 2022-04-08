@@ -475,6 +475,8 @@ antirez提出的**Redlock**算法大概是这样的：
 * https://github.com/elastic/elasticsearch
 * https://redis.io/topics/faq
 * https://www.cnblogs.com/madashu/p/12832766.html
+* https://redis.io/docs/reference/patterns/distributed-locks/  Redis分布式锁
+* http://antirez.com/news/101  RedLock安全吗？
 
 ### Elasticsearch
 **定义**<br />
