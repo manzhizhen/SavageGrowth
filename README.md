@@ -787,6 +787,18 @@ Netty 支持零复制方法，通过ChannelBuffer“指向”所需的缓冲区�
 
 
 # JVM
+## JVM工具
+|  命令   | 描述  |
+|  ----  | ----  |
+| jps  | JVM Process Status Tool |
+| jstat  | JVM Statistics Monitoring Tool |
+| jinfo  | Configuration Info for Java |
+| jmap  | Memory Map for Java |
+| jstat  | JVM Heap Dump Browser |
+| jstack  | Stack Trace for Java |
+
+<img width="1361" alt="常用的JVM工具命令" src="https://user-images.githubusercontent.com/6687462/162473127-dbcec47f-f399-4109-a1cf-d0f49f4cfde8.png">
+
 ## 运行时数据区域
 线程私有的内存区域有**程序计数器**、**Java虚拟机栈**和**本地方法栈**，程序计数器是Java虚拟机规范中唯一没有要求OOM的地方；<br />
 线程公用的有**堆**和**方法区**，方法区在JDK8之前的HotSpot叫做永久代，在JDK8以及之后叫做元数据区，元数据区作为直接内存来管理，只受操作系统内存的限制。<br />
