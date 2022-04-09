@@ -37,7 +37,7 @@
         - [ZAB](#ZAB)
         - [为什么要选主](#为什么要选主)
     - [RPC框架](#RPC框架)
-        - [Apache Dubbo](#Dubbo)
+        - [Dubbo](#Dubbo)
     - [ZooKeeper](#ZooKeeper)
     - [MQ](#MQ)
       - [RocketMQ](#RocketMQ)
