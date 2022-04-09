@@ -875,9 +875,24 @@ G1收集器的运作过程大致可划分为以下四个步骤：<br />
 
 # Java&操作系统基础
 
+## Java对象锁
+synchronized是依赖JVM内部对象Monitor实现的，通过进入与退出Monitor对象实现方法与代码块同步。
+监视器锁的实现依赖底层操作系统的Mutex lock（互斥锁）实现的，它的性能较低。同步代码块的synchronized关键字在字节码文件中会被翻译成 **monitorenter** 和 **monitorexit** 两条指令来标志同步代码块的开始位置和结束为止。
+
+锁状态的记录主要存储在markword中，markword的结构如下(以64位为例)：<br />
+
+![HotSpot的对象锁](https://user-images.githubusercontent.com/6687462/162550212-0d9e0c4f-cec0-4fe8-a171-f2766dec0d41.jpeg)
+
+其中最后一位记录了当前对象的锁状态，总共分为三种锁状态，**偏向锁**、**自旋锁**、**重量级锁**（对象监视器）。
+
+
 ## Java引用
 Java里面分为强引用、软引用、弱引用、虚引用。<br />
 每个线程Thread对象中都保存着一个ThreadLocalMap实例，而ThreadLocalMap中有一个Entry的数组（private Entry[] table;），Entry中的key类型是WeakReference<ThreadLocal>而非ThreadLocal，这样做的目的是为了当我们不再使用或短时间不再使用该ThreadLocal时，哪怕运行中线程的ThreadLocalMap实例有该ThreadLocal的Entry，JVM也能在GC时将ThreadLocal回收，避免内存泄露。
+* **强引用**：创建一个对象并把这个对象赋给一个引用变量，就是强引用，宁可OOM也不会释放的引用类型。
+* **软引用**：如果一个对象具有软引用，内存空间足够，垃圾回收器就不会回收它。
+* **弱引用**：用来描述非必需对象的，当JVM进行垃圾回收时，无论内存是否充足，都会回收被弱引用关联的对象。
+* **虚引用**：虚引用和前面的软引用、弱引用不同，它并不影响对象的生命周期。在java中用java.lang.ref.PhantomReference类表示。如果一个对象与虚引用关联，则跟没有引用与之关联一样，在任何时候都可能被垃圾回收器回收。要注意的是，虚引用必须和引用队列关联使用，当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会把这个虚引用加入到与之 关联的引用队列中。程序可以通过判断引用队列中是否已经加入了虚引用，来了解被引用的对象是否将要被垃圾回收。
 
 
 ## 多线程
