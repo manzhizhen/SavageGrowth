@@ -55,7 +55,10 @@
 - [常见工具](#常见工具) 
     - [Arthas](#Arthas)
 - [JVM](#JVM) 
+    - [类加载器](#类加载器)
+    - [JVM工具](#JVM工具)
     - [运行时数据区域](#运行时数据区域)
+    - [内存分配](#内存分配)
     - [垃圾收集算法](#垃圾收集算法)
     - [垃圾收集器](#垃圾收集器)
     - [类加载的过程](#类加载的过程)
@@ -829,7 +832,7 @@ Netty 支持零复制方法，通过ChannelBuffer“指向”所需的缓冲区�
 实现通过类的全限定名获取该类的二进制字节流的代码块叫做类加载器，它把类的.class文件的数据读入到内存中，通常是创建一个字节数组读入.class文件，然后产生与所加载类对应的class对象，加载完成后，Class对象还不完整，所以此时的类还不可用。
 
 主要有以下四种类加载器：
-1、启动类加载器（Bootstrap ClassLoader）用来加载java核心类库，无法被java程序直接引用。
+1、启动类加载器（Bootstrap ClassLoader）这个类加载器使用C/C++语言实现，嵌套在JVM内部。用来加载Java核心类库。 并不继承于java.lang.ClassLoader没有父加载器。
 2、扩展类加载器（Extensions ClassLoader）用来加载java的扩展库。java虚拟机的实现会提供一个扩展库目录。该类加载器在此目录里面查找并加载java类，它的父类加载器是Bootrap。
 3、系统类加载器（System ClassLoader）根据java应用的类路径（CLASSPATH）来加载java类。一般来说，java应用的类都是由它来完成加载的。可以通过ClassLoader.getSystemLoader()来获取它，它是应用最广泛的类加载器。。
 4、用户自定义类加载器，通过继承java.lang.ClassLoader类的方式实现。
