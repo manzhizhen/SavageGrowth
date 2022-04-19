@@ -1106,10 +1106,22 @@ select，poll，epoll都是IO多路复用的机制。I/O多路复用就是通过
 * https://segmentfault.com/a/1190000003063859
 
 ## 零拷贝
-零拷贝主要是用来解决操作系统在处理 I/O 操作时，频繁复制数据的问题。关于零拷贝主要技术有 mmap+write、sendfile和splice等几种方式。无论是传统的 I/O 方式，还是引入了零拷贝之后，2 次 DMA copy是都少不了的。因为两次 DMA 都是依赖硬件完成的。所以，所谓的零拷贝，都是为了减少 CPU copy 及减少了上下文的切换。
+零拷贝主要是用来解决操作系统在处理 I/O 操作时，频繁复制数据的问题。关于零拷贝主要技术有 mmap+write、sendfile和splice等几种方式。
+无论是传统的I/O方式，还是引入了零拷贝之后，2次DMAcopy是都少不了的。因为两次 DMA 都是依赖硬件完成的。所以，所谓的零拷贝，都是为了减少CPU copy及减少了上下文的切换。
+
+![零拷贝](https://user-images.githubusercontent.com/6687462/163912641-1c0dfdcb-06f2-4fda-859c-b815566f4d79.png)
+
+|    | CPU拷贝 | 	DMA拷贝 | 系统调用| 上下文切换 |
+|  ----  | ----  | ----  | ----  | --------  |
+| 传统方法 | 2	| 2	| read+write	| 4 |
+| 内存映射 |	1	| 2	| mmap+write	| 4 |
+| sendfile |	1	| 2	| sendfile	| 2 |
+| scatter/gather copy	| 0	| 2	|sendfile	| 2 |
+|splice	| 0	| 2	| splice | 0 |
 
 **参考资料：**<br />
 * https://juejin.cn/post/6995519558475841550
+* https://blog.csdn.net/h1012946585/article/details/109175511
 
 ## 伪共享
 CPU和内存之间还有个CPU缓存的概念，CPU缓存又分为L1、L2和L3三级；级别数字越小容量也越小，同时离CPU也越近访问速度会越快；L1和L2集成在CPU上，L3集成在主板上，CPU缓存是以缓存行（Cache line）为最小数据单位，缓存行是2的整数幂个连续字节，主流大小是64个字节。如果多个变量同属于一个缓存行，在并发环境下同时修改，因为写屏障及内存一致性协议会导致同一时间只能一个线程操作该缓存行，进而因为竞争导致性能下降，这就是“伪共享”。“伪共享”是高并发场景下一个底层细节问题。
