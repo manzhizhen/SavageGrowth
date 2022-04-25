@@ -324,6 +324,22 @@ Serverless利用现代云计算功能和抽象的优势，让您专注于业务�
 #### 架构
 <img width="1070" alt="MySQL架构图" src="https://user-images.githubusercontent.com/6687462/159244881-02febb00-320a-4aa9-9f43-653c7602ab3b.png">
 
+#### MySQL执行计划
+expain出来的信息有10列，分别是id、select_type、table、type、possible_keys、key、key_len、ref、rows、Extra
+概要描述：
+id:选择标识符
+select_type:表示查询的类型。
+table:输出结果集的表
+partitions:匹配的分区
+type:对表访问方式，表示MySQL在表中找到所需行的方式，又称“访问类型”。 常用的类型有： ALL、index、range、 ref、eq_ref、const、system、NULL（从左到右，性能从差到好）
+possible_keys:表示查询时，可能使用的索引
+key:表示实际使用的索引
+key_len:索引字段的长度
+ref:列与索引的比较
+rows:扫描出的行数(估算的行数)
+filtered:按表条件过滤的行百分比
+Extra:执行情况的描述和说明
+
 #### InnoDB的锁
 ##### 共享锁和独占锁
 InnoDB实现标准的行级锁定，其中有两种类型的锁， **共享锁(shared lock)** 和 **独占锁(exclusive lock)**。
@@ -458,8 +474,8 @@ Redis的多线程部分只是用来处理网络数据的读写和协议解析，
 
 #### 持久化方案
 Redis持久化方案分为RDB和AOF两种。<br/>
-RDB：按指定的时间间隔执行数据集的时间点快照。 <br />
-AOF：会记录服务器接收的每个写入操作，这些操作将在服务器启动时再次播放，以重建原始数据集。使用与Redis协议本身相同的格式记录命令，并且采用追加方式。当日志太大时，Redis可以在后台重写日志。 
+RDB(Redis DataBase)：按指定的时间间隔执行数据集的时间点快照。 <br />
+AOF(Append Only File)：会记录服务器接收的每个写入操作，这些操作将在服务器启动时再次播放，以重建原始数据集。使用与Redis协议本身相同的格式记录命令，并且采用追加方式。当日志太大时，Redis可以在后台重写日志。 
 
 注意，可以在同一实例中同时合并AOF和RDB。在这种情况下，当Redis重新启动时，将使用AOF文件用于重建原始数据集，因为它可以保证是最完整的。
 
