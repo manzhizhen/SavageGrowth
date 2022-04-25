@@ -347,8 +347,8 @@ InnoDB实现标准的行级锁定，其中有两种类型的锁， **共享锁(s
 
 间隙锁是性能和并发性之间权衡的一部分，并且用于某些事务隔离级别而不是其他级别。
 
-使用唯一索引锁定行以搜索唯一行的语句不需要间隙锁定。（这不包括搜索条件仅包括多列唯一索引的某些列的情况；在这种情况下，确实会发生间隙锁定。）例如，如果该id列具有唯一索引，则以下语句仅使用值为 100的行的索引记录锁，id其他会话是否在前面的间隙中插入行无关紧要：
-
+使用唯一索引锁定行以搜索唯一行的语句不需要间隙锁定。（这不包括搜索条件仅包括多列唯一索引的某些列的情况；在这种情况下，确实会发生间隙锁定。）
+例如，如果该id列具有唯一索引，则以下语句仅使用值为 100的行的索引记录锁，id其他会话是否在前面的间隙中插入行无关紧要：
 SELECT * FROM child WHERE id = 100;
 如果id没有索引或具有非唯一索引，则该语句会锁定前面的间隙。
 
@@ -374,11 +374,26 @@ InnoDB执行行级锁定的方式是，当它搜索或扫描表索引时，它�
 ##### 插入意向锁
 插入意向锁是一种 INSERT在行插入之前由操作设置的间隙锁。该锁表示插入的意图，即如果插入到同一索引间隙中的多个事务没有在间隙内的同一位置插入，则它们不需要相互等待。假设有值为 4 和 7 的索引记录。分别尝试插入值 5 和 6 的单独事务，在获得插入行的排他锁之前，每个使用插入意图锁锁定 4 和 7 之间的间隙，但不要相互阻塞，因为行是不冲突的。
 
-
+##### InnoDB默认的事务隔离级别
 在可重复读隔离级别，对于锁定读取 （SELECT with FOR UPDATE或FOR SHARE）、 UPDATE和 DELETE语句，锁定取决于语句是使用具有唯一搜索条件的唯一索引还是范围类型的搜索条件。
 * 对于具有唯一搜索条件的唯一索引， InnoDB只锁定找到的索引记录，而不锁定 它之前 的间隙。
 * 对于其他搜索条件，InnoDB 锁定扫描的索引范围，使用 间隙锁 或 Next-Key锁 来阻止其他会话插入该范围所覆盖的间隙。
 
+数据库状态的快照适用 SELECT于事务中的语句，不一定适用于 DML语句。如果您插入或修改某些行然后提交该事务， 则从另一个并发事务发出的DELETE或 语句 可能会影响那些刚刚提交的行，即使会话无法查询它们。
+如果一个事务确实更新或删除了由不同事务提交的行，那么这些更改对当前事务是可见的。例如，您可能会遇到如下情况：
+```
+SELECT COUNT(c1) FROM t1 WHERE c1 = 'xyz';
+-- Returns 0: no rows match.
+DELETE FROM t1 WHERE c1 = 'xyz';
+-- Deletes several rows recently committed by other transaction.
+
+SELECT COUNT(c2) FROM t1 WHERE c2 = 'abc';
+-- Returns 0: no rows match.
+UPDATE t1 SET c2 = 'cba' WHERE c2 = 'abc';
+-- Affects 10 rows: another txn just committed 10 rows with 'abc' values.
+SELECT COUNT(c2) FROM t1 WHERE c2 = 'cba';
+-- Returns 10: this txn can now see the rows it just updated.
+```
 
 #### MGR
 即MySQL Group Replication，是官方提供的MySQL高可用解决方案。我们知道创建容错系统的常见方式是使组件冗余，对于MySQL而言，最终的挑战是将数据复制的逻辑与多个服务器以一致且简单的方式进行协调的逻辑相融合。换句话说，要让多个服务器就系统的状态以及系统所经历的每一次更改的数据达成一致。<br />
@@ -402,6 +417,7 @@ MGR:<br />
 * https://dev.mysql.com/doc/refman/8.0/en/group-replication.html
 * https://dev.mysql.com/doc/refman/8.0/en/binlog.html
 * https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-locking-transaction-model.html
+* https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-consistent-read.html
 
 ## NoSQL
 NoSQL常见的四种类型：键值对型、文档型、列式存储型和图型。
