@@ -687,6 +687,28 @@ Raft将系统中的角色分为领导者（Leader）、跟从者（Follower）�
 * Candidate：Leader选举过程中的临时角色。
 
 ![Raft算法角色转换](https://user-images.githubusercontent.com/6687462/159512756-7d9a279f-7dfb-4dfb-8f04-889a365410f6.jpg)
+1. 所有节点启动时都是follower状态，在一段时间如果没有收到来自leader的心跳，follower切换为candidate,并发起选举。
+2. 如果收到了超半数的选举票（包含自己的一票），那么切换为 leader 状态。
+3. 如果发现其他节点比自己更加新，则主动切换为follower。
+
+#### 选举过程
+follower 在 timeout 时间内，没有收到来自 leader 的心跳，则会发起选举：
+1. 增加节点本地的 current term, 切换为 candidate 状态
+2. 投自己一票
+3. 并行的发送给其他节点 RequestVotes RPCs
+4. 等待其他节点的回复：
+   a. 收到了 大多数选票（majority )，那么赢得选举，切换状态为 leader
+   b. 被告知别人已经当选，则切换为 follower
+   c. 一段时间还是没有收到 majority 的投票结果，保持 candidate 状态，重新发出选举。
+每个任期，一个节点只能投票一次，候选人知道的信息不能比自己少，fisrtcome- first-serverd 先到先得。
+
+系统中只会存在一个leader, 如果一段时间内没有 leader, 那么大家通过选举的方式选出 leader. leader 不停的向 follower 发出心跳，表明leader的存活状态，如果leader故障，follower会切换成candidate选举出新leader。
+
+#### 如何防止脑裂
+这个存疑，感觉不太对
+1. 一个节点某一任期内最多只能投一票；
+2. 只有获得大多数选票才能成为领导人；
+
 
 ### Gossip
 Gossip protocol 也叫 Epidemic Protocol （流行病协议），是基于流行病传播方式的节点或者进程之间信息交换的协议。。Gossip protocol在1987年8月由施乐公司帕洛阿尔托研究中心研究员艾伦·德默斯（Alan Demers）发表在ACM上的论文《Epidemic Algorithms for Replicated Database Maintenance》中被提出。
