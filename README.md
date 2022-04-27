@@ -714,6 +714,19 @@ Gossip protocol 也叫 Epidemic Protocol （流行病协议），是基于流行
 ## ZooKeeper
 定义：ZooKeeper是一个分布式协作框架，用于维护配置信息，命名，提供分布式同步以及提供组服务。
 
+### ZooKeeper集群架构
+ZooKeeper 集群中包含 Leader、Follower 以及 Observer 三个角色：
+* Leader：负责进行投票的发起和决议，更新系统状态，Leader 是由选举产生;
+* Follower： 用于接受客户端请求并向客户端返回结果，在选主过程中参与投票;
+* Observer：可以接受客户端连接，接受读写请求，写请求转发给 Leader，但 Observer 不参加投票过程，只同步 Leader 的状态，Observer 的目的是为了扩展系统，提高读取速度。
+
+### ZooKeeper节点类型
+ZooKeeper3.6.2后的版本支持7种节点类型分别是：持久、持久顺序、临时、临时顺序、容器、持久 TTL、持久顺序 TTL（之前是四种）。
+* 持久、临时：持久不用我多说，是用的最多的一种类型，也是默认的节点类型，临时节点相较于持久节点来说，就是它会随着客户端会话结束而被删除，通常可以用在一些特定的场景，例如分布式锁释放，健康检查等。
+* 持久顺序、临时顺序：这两种我放在一起介绍，因为他们相对于上面两种的特性就是 ZK 会自动在这两种节点之后增加一个数字的后缀，而路径 + 数字后缀是能保证唯一的，这数字后缀的应用场景可以实现诸如分布式队列，分布式公平锁等。
+* 容器：容器节点是 3.5 以后新增的节点类型，只要在调用create方法时，指定CreateMode 为CONTAINER 即可创建容器的节点类型，容器节点的表现形式和持久节点是一样的，但是区别是 ZK 服务端启动后，会有一个单独的线程去扫描，所有的容器节点，当发现容器节点的子节点数量为0时，会自动删除该节点，除此之外和持久节点没有区别，官方注释给出的使用场景是Container nodes are special purpose nodes useful for recipes such as leader, lock, etc. 说可以用在 leader 或者锁的场景中。
+* 持久TTL、持久顺序TTL：关于持久和顺序这两个关键字，不用我再解释了，这两种类型的节点重点是后面的TTL，TTL 是time to live 的缩写，指带有存活时间，简单来说就是当该节点下面没有子节点的话，超过了TTL 指定时间后就会被自动删除，特性跟上面的容器节点很像，只是容器节点没有超时时间而已，但是TTL 启用是需要额外的配置（这个之前也有提过）配置是zookeeper.extendedTypesEnabled 需要配置成true，否则的话创建TTL 时会收到Unimplemented 的报错
+
 ## RPC框架
 ### Dubbo
 
