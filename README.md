@@ -940,7 +940,9 @@ On shutdown of a bean factory, the following lifecycle methods apply:
 
 
 ### IoC
-org.springframework.beans和org.springframework.context包是Spring框架的IoC容器的基础。
+org.springframework.beans和org.springframework.context包是Spring框架的IoC容器的基础。<br />
+* 控制 ：指的是对象创建（实例化、管理）的权力
+* 反转 ：控制权交给外部环境（Spring 框架、IoC 容器）
 
 ### AOP
 Spring通过使用基于Schema的方法或@AspectJ注释样式，提供了编写自定义方面的简单而强大的方式。<br />
@@ -953,6 +955,43 @@ Spring通过使用基于Schema的方法或@AspectJ注释样式，提供了编写
 AOP代理(AOP proxy)：由AOP框架创建的一个对象，用于实现切面合同（增强方法执行等）。在Spring Framework中，AOP代理是JDK动态代理或CGLIB代理。
 
 Spring AOP并未想和AspectJ竞争以提供全面的AOP解决方案，而是和Spring IoC和AspectJ结合，Spring AOP默认将标准JDK动态代理用于AOP代理。这使得可以代理任何接口（或一组接口）。Spring AOP也可以使用CGLIB代理。这对于代理类而不是接口是必需的。默认情况下，如果业务对象未实现接口，则使用CGLIB。
+
+### Spring AOP和AspectJ AOP
+Spring AOP 属于运行时增强，而 AspectJ 是编译时增强。 Spring AOP 基于代理(Proxying)，而 AspectJ 基于字节码操作(Bytecode Manipulation)。 Spring AOP 已经集成了 AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。AspectJ 相比于 Spring AOP 功能更加强大，但是 Spring AOP 相对来说更简单，如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择 AspectJ ，它比 Spring AOP 快很多。
+
+### Bean的作用域
+* singleton : 唯一 bean 实例，Spring 中的 bean 默认都是单例的，对单例设计模式的应用。
+* prototype : 每次请求都会创建一个新的 bean 实例。
+* request : 每一次 HTTP 请求都会产生一个新的 bean，该 bean 仅在当前 HTTP request 内有效。
+* session : 每一次来自新 session 的 HTTP 请求都会产生一个新的 bean，该 bean 仅在当前 HTTP session 内有效。
+* global-session ： 全局 session 作用域，仅仅在基于 portlet 的 web 应用中才有意义，Spring5 已经没有了。Portlet 是能够生成语义代码(例如：HTML)片段的小型 Java Web 插件。它们基于 portlet 容器，可以像 servlet 一样处理 HTTP 请求。但是，与 servlet 不同，每个 portlet 都有不同的会话。
+
+### Bean的生命周期
+1. Bean 容器找到配置文件中 Spring Bean 的定义。
+2. Bean 容器利用 Java Reflection API 创建一个 Bean 的实例。
+3. 如果涉及到一些属性值 利用 set()方法设置一些属性值。
+4. 如果 Bean 实现了 BeanNameAware 接口，调用 setBeanName()方法，传入 Bean 的名字。
+5. 如果 Bean 实现了 BeanClassLoaderAware 接口，调用 setBeanClassLoader()方法，传入 ClassLoader对象的实例。
+6. 如果 Bean 实现了 BeanFactoryAware 接口，调用 setBeanFactory()方法，传入 BeanFactory对象的实例。
+7. 与上面的类似，如果实现了其他 *.Aware接口，就调用相应的方法。
+8. 如果有和加载这个 Bean 的 Spring 容器相关的 BeanPostProcessor 对象，执行postProcessBeforeInitialization() 方法
+9. 如果 Bean 实现了InitializingBean接口，执行afterPropertiesSet()方法。
+10. 如果 Bean 在配置文件中的定义包含 init-method 属性，执行指定的方法。
+11. 如果有和加载这个 Bean 的 Spring 容器相关的 BeanPostProcessor 对象，执行postProcessAfterInitialization() 方法
+12. 当要销毁 Bean 的时候，如果 Bean 实现了 DisposableBean 接口，执行 destroy() 方法。
+13. 当要销毁 Bean 的时候，如果 Bean 在配置文件中的定义包含 destroy-method 属性，执行指定的方法。
+
+### Spring中用到了哪些设计模式
+* 工厂设计模式 : Spring 使用工厂模式通过 BeanFactory、ApplicationContext 创建 bean 对象。
+* 代理设计模式 : Spring AOP 功能的实现。
+* 单例设计模式 : Spring 中的 Bean 默认都是单例的。
+* 模板方法模式 : Spring 中 JdbcTemplate、RestTemplate 等以 Template 结尾的对数据库操作的类，它们就使用到了模板模式。
+* 包装器设计模式 : 我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。这种模式让我们可以根据客户的需求能够动态切换不同的数据源。
+* 观察者模式: Spring 事件驱动模型就是观察者模式很经典的一个应用。
+* 适配器模式 : Spring AOP 的增强或通知(Advice)使用到了适配器模式、Spring MVC 中也是用到了适配器模式适配Controller。
+
+### Spring的Environment
+Environment接口是集成在容器中的抽象，它对应用程序环境的两个关键方面进行建模：配置文件 和属性。
 
 ### Spring MVC
 SpringMVC流程
@@ -967,6 +1006,10 @@ SpringMVC流程
 9. ViewReslover解析后返回具体View。
 10. DispatcherServlet根据View进行渲染视图（即将模型数据填充至视图中）。
 11. DispatcherServlet响应用户。
+
+**参考资料**<br />
+* https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-environment
+* https://github.com/Snailclimb/JavaGuide/blob/main/docs/system-design/framework/spring/spring-knowledge-and-questions-summary.md
 
 ## SpringBoot
 **目的：** Spring Boot是为了让我们创建独立的基于Spring的产品级应用更容易，Spring Boot采用"约定优于配置"的思路，让我们只需要少量配置就可以启用Spring Boot应用，降低了Spring应用的建设成本。
@@ -984,6 +1027,7 @@ Spring Boot使您可以外部化配置，以便可以在不同环境中使用相
 **自动配置**<br />
 您需要非常注意添加bean定义的顺序，因为这些条件是根据到目前为止已处理的内容来评估的。因此，我们建议仅在自动配置类上使用@ConditionalOnBean和@ConditionalOnMissingBean
 注释（因为保证在添加任何用户定义的Bean定义后才会加载这些注释）。
+
 
 ## Netty
 ### 定义
