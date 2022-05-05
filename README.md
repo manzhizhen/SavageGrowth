@@ -778,7 +778,7 @@ Dubbo3 格式的 Provider 地址不能被 Dubbo2 的 Consumer 识别到，反之
 * 适配云原生微服务变革。云原生时代的基础设施能力不断向上释放，像 Kubernetes 等平台都集成了微服务概念抽象，Dubbo3 的应用级服务发现是适配各种微服务体系的通用模型。
 * 提升性能与可伸缩性。支持超大规模集群的服务治理一直以来都是 Dubbo 的优势，通过引入应用级服务发现模型，从本质上解决了注册中心地址数据的存储与推送压力，相应的 Consumer 侧的地址计算压力也成数量级下降；集群规模也开始变得可预测、可评估（与 RPC 接口数量无关，只与实例部署规模相关）。
 
-#### RPC通信协议
+#### 通信协议
 Dubbo3 提供了 Triple(Dubbo3)、Dubbo2 协议，这是 Dubbo 框架的原生协议。除此之外，Dubbo3 也对众多第三方协议进行了集成，并将它们纳入 Dubbo 的编程与服务治理体系， 包括 gRPC、Thrift、JsonRPC、Hessian2、REST 等。以下重点介绍 Triple 与 Dubbo2 协议。
 RPC 协议的设计需要考虑以下内容：
 * 通用性： 统一的二进制格式，跨语言、跨平台、多传输层协议支持
@@ -797,12 +797,20 @@ RPC 协议的设计需要考虑以下内容：
 * 安全性上，支持双向TLS认证（mTLS）等加密传输能力。
 * 易用性上，Triple 除了支持原生 gRPC 所推荐的 Protobuf 序列化外，使用通用的方式支持了 Hessian / JSON 等其他序列化，能让用户更方便的升级到 Triple 协议。对原有的 Dubbo 服务而言，修改或增加 Triple 协议 只需要在声明服务的代码块添加一行协议配置即可，改造成本几乎为 0。
 
-
-
 **参考资料**<br />
 * https://dubbo.apache.org/zh/docs/
 * https://dubbo.apache.org/zh/docs/concepts/registry-configcenter-metadata/
 * https://dubbo.apache.org/zh/docs/migration/migration-service-discovery/
+
+### Thrift
+
+### 序列化协议性能对比
+![序列化协议性能对比](https://user-images.githubusercontent.com/6687462/166863103-95b8c94c-14ba-4874-b186-3336846af801.png)
+
+![序列化协议空间对比](https://user-images.githubusercontent.com/6687462/166863107-9def934c-032a-4edb-9d7f-766f4e8d8259.png)
+
+**参考资料**<br />
+* https://tech.meituan.com/2015/02/26/serialization-vs-deserialization.html
 
 ## MQ
 
