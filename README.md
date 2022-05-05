@@ -471,6 +471,9 @@ Redis是一种采用内存来作为数据结构存储的数据库、缓存和消
 #### 部署说明
 Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如Linux，* BSD，OS X，而无需外部依赖。Linux和OS X是Redis开发和测试最多的两个操作系统，我们建议使用Linux进行部署。<br/>
 
+#### 支持的数据结构
+Redis支持五种数据类型：string(字符串)，hash(哈希)，list(列表)，set(集合)及zset(sorted set:有序集合)。
+
 #### 内部数据结构
 简单动态字符串(Simple Dynamic Strings, SDS)、双端链表、跳跃表(skiplist)、压缩列表、快速列表(Redis3.2引入，quicklist)、字典(散列表)、整数集合(intset)。
 * **跳跃表**： 考虑一个有序表
