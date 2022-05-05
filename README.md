@@ -333,7 +333,7 @@ expain出来的信息有10列，分别是id、select_type、table、type、possi
 * select_type:表示查询的类型。
 * table:输出结果集的表
 * partitions:匹配的分区
-* type:对表访问方式，表示MySQL在表中找到所需行的方式，又称“访问类型”。 常用的类型有： ALL、index、range、 ref、eq_ref、const、system、NULL（从左到右，性能从差到好）
+* type:对表访问方式，表示MySQL在表中找到所需行的方式，又称“访问类型”。 常用的类型有： ALL、index、range、ref、eq_ref、const、system、NULL（从左到右，性能从差到好）
 * possible_keys:表示查询时，可能使用的索引
 * key:表示实际使用的索引
 * key_len:索引字段的长度
