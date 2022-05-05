@@ -326,20 +326,21 @@ Serverless利用现代云计算功能和抽象的优势，让您专注于业务�
 <img width="1070" alt="MySQL架构图" src="https://user-images.githubusercontent.com/6687462/159244881-02febb00-320a-4aa9-9f43-653c7602ab3b.png">
 
 #### MySQL执行计划
-expain出来的信息有10列，分别是id、select_type、table、type、possible_keys、key、key_len、ref、rows、Extra
+expain出来的信息有10列，分别是id、select_type、table、type、possible_keys、key、key_len、ref、rows、Extra.
+
 概要描述：
-id:选择标识符
-select_type:表示查询的类型。
-table:输出结果集的表
-partitions:匹配的分区
-type:对表访问方式，表示MySQL在表中找到所需行的方式，又称“访问类型”。 常用的类型有： ALL、index、range、 ref、eq_ref、const、system、NULL（从左到右，性能从差到好）
-possible_keys:表示查询时，可能使用的索引
-key:表示实际使用的索引
-key_len:索引字段的长度
-ref:列与索引的比较
-rows:扫描出的行数(估算的行数)
-filtered:按表条件过滤的行百分比
-Extra:执行情况的描述和说明
+* id:选择标识符
+* select_type:表示查询的类型。
+* table:输出结果集的表
+* partitions:匹配的分区
+* type:对表访问方式，表示MySQL在表中找到所需行的方式，又称“访问类型”。 常用的类型有： ALL、index、range、 ref、eq_ref、const、system、NULL（从左到右，性能从差到好）
+* possible_keys:表示查询时，可能使用的索引
+* key:表示实际使用的索引
+* key_len:索引字段的长度
+* ref:列与索引的比较
+* rows:扫描出的行数(估算的行数)
+* filtered:按表条件过滤的行百分比
+* Extra:执行情况的描述和说明
 
 #### MySQL8.0新特性
 1. 隐藏索引：隐藏索引的特性对于性能调试非常有用。在 8.0 中，索引可以被“隐藏”和“显示”。当一个索引隐藏时，它不会被查询优化器所使用。
