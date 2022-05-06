@@ -604,6 +604,33 @@ antirez提出的**Redlock**算法大概是这样的：
 4. 如果取到了锁，key的真正有效时间等于有效时间减去获取锁所使用的时间（步骤3计算的结果）。
 5. 如果因为某些原因，获取锁失败（没有在至少N/2+1个Redis实例取到锁或者取锁时间已经超过了有效时间），客户端应该在所有的Redis实例上进行解锁（即便某些Redis实例根本就没有加锁成功，防止某些节点获取到锁但是客户端没有得到响应而导致接下来的一段时间不能被重新获取锁）。
 
+
+#### Redisson
+Redisson是Redis主流的Java客户端之一，相比Jedis原封不动的包装Redis的API，Redisson提供了
+
+```java
+    @Override
+    public boolean tryLock() {
+        return get(tryLockAsync());
+    }
+
+    <T> RFuture<T> tryLockInnerAsync(long waitTime, long leaseTime, TimeUnit unit, long threadId, RedisStrictCommand<T> command) {
+        return evalWriteAsync(getRawName(), LongCodec.INSTANCE, command,
+                "if (redis.call('exists', KEYS[1]) == 0) then " +
+                        "redis.call('hincrby', KEYS[1], ARGV[2], 1); " +
+                        "redis.call('pexpire', KEYS[1], ARGV[1]); " +
+                        "return nil; " +
+                        "end; " +
+                        "if (redis.call('hexists', KEYS[1], ARGV[2]) == 1) then " +
+                        "redis.call('hincrby', KEYS[1], ARGV[2], 1); " +
+                        "redis.call('pexpire', KEYS[1], ARGV[1]); " +
+                        "return nil; " +
+                        "end; " +
+                        "return redis.call('pttl', KEYS[1]);",
+                Collections.singletonList(getRawName()), unit.toMillis(leaseTime), getLockName(threadId));
+    }
+```
+
 **参考资料**
 * https://www.jianshu.com/p/c2841d65df4c
 * https://redis.io/
@@ -1246,6 +1273,7 @@ volatile实现原理：1. Lock前缀指令会引起处理器缓存回写到内�
 * 如果 a happen-before b，b happen-before c，则a happen-before c（传递性）。
 
 为了实现volatile可见性和happen-before的语义。JVM底层是通过一个叫做“**内存屏障**”的东西来完成。内存屏障，也叫做内存栅栏，是一组处理器指令，用于实现对内存操作的顺序限制。下面是完成上述规则所要求的内存屏障：
+
 a. LoadLoad 屏障
 执行顺序：Load1—>Loadload—>Load2
 确保Load2及后续Load指令加载数据之前能访问到Load1加载的数据。
