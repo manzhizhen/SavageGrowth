@@ -26,6 +26,7 @@
         - [MySQL](#MySQL)
     - [NoSQL](#NoSQL)
         - [Redis](#Redis)
+        - [Elasticsearch](#Elasticsearch)
 - [分布式系统](#分布式系统)
     - [常见的一致性算法（共识算法）](#常见的一致性算法（共识算法）)
         - [2PC&3PC](#2PC&3PC)
@@ -647,10 +648,22 @@ Redisson是Redis主流的Java客户端之一，相比Jedis原封不动的包装R
 * http://antirez.com/news/101  RedLock安全吗？
 
 ### Elasticsearch
-**定义**<br />
+
+#### 定义
 Elasticsearch是一个分布式、RESTful风格的搜索和数据分析引擎。<br />
 它为所有类型的数据提供近乎实时的搜索和分析，无论您是结构化文本还是非结构化文本，数字数据或地理空间数据，Elasticsearch都能以支持快速搜索的方式有效地对其进行存储和索引。
-**特点**<br />
+
+Elasticsearch：index --> type --> doc --> field<br />
+MySQL: 数据库 --> 数据表 --> 行 --> 列
+
+#### Index
+
+#### Type（已废弃）
+* 在 5.X 版本中，一个 index 下可以创建多个 type；
+* 在 6.X 版本中，一个 index 下只能存在一个 type；
+* 在 7.X 版本中，直接去除了 type 的概念，就是说 index 不再会有 type。
+
+#### 特点
 建立在Apache Lucene之上、分布式、高可用、多租户、API丰富、面向文档；
 **配合使用**<br />
 Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展现）
