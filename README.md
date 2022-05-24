@@ -477,21 +477,19 @@ Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如L
 
 #### 内部数据结构
 简单动态字符串(Simple Dynamic Strings, SDS)、双端链表、跳跃表(skiplist)、压缩列表、快速列表(Redis3.2引入，quicklist)、字典(散列表)、整数集合(intset)。
-* **跳跃表**： 考虑一个有序表
-
+##### 跳跃表
+考虑一个有序表
     * ![redis跳跃表1](https://user-images.githubusercontent.com/6687462/162159457-d64d7b92-5ad1-40d0-a10d-7a3c7a74e3ec.png)
-
     * 从该有序表中搜索元素 < 23, 43, 59 > ，需要比较的次数分别为 < 2, 4, 6 >，总共比较的次数为 2 + 4 + 6 = 12 次。有没有优化的算法吗? 链表是有序的，但不能使用二分查找。类似二叉
 搜索树，我们把一些节点提取出来，作为索引。得到如下结构：
-
     * ![redis跳跃表2](https://user-images.githubusercontent.com/6687462/162159488-56f245cf-06b6-44de-84b3-9e884cfb4e37.jpg)
-
     * 这里我们把 < 14, 34, 50, 72 > 提取出来作为一级索引，这样搜索的时候就可以减少比较次数了。 我们还可以再从一级索引提取一些元素出来，作为二级索引，变成如下结构：
-
     * ![redis跳跃表3](https://user-images.githubusercontent.com/6687462/162159508-f8d30a4c-a725-4100-b4a9-2ae24309885c.jpg)
-
     * 这里元素不多，体现不出优势，如果元素足够多，这种索引结构就能体现出优势来了。
-    
+
+实际上，Redis中Sorted Set的实现是这样的：
+* 当数据较少时，sorted set是由一个ziplist来实现的。
+* 当数据多的时候，sorted set是由一个dict + 一个skiplist来实现的。简单来讲，dict用来查询数据到分数的对应关系(例如zscore的查询)，而skiplist用来根据分数查询数据（可能是范围查找）。
 
 #### Redis是单线程的。如何利用多个多核CPU？
 CPU成为Redis瓶颈的情况并不常见，因为Redis通常是内存或网络绑定的。例如，在一个普通的Linux系统上运行的流水线Redis每秒甚至可以传递100万个请求，所以如果您的应用程序主要使用O（N）或O（log（N））命令，它几乎不会占用太多的CPU。
@@ -646,6 +644,7 @@ Redisson是Redis主流的Java客户端之一，相比Jedis原封不动的包装R
 * https://www.cnblogs.com/madashu/p/12832766.html
 * https://redis.io/docs/reference/patterns/distributed-locks/  Redis分布式锁
 * http://antirez.com/news/101  RedLock安全吗？
+* https://mp.weixin.qq.com/s?__biz=MzA4NTg1MjM0Mg==&mid=2657261425&idx=1&sn=d840079ea35875a8c8e02d9b3e44cf95&scene=0#wechat_redirect  Redis为什么用跳表而不用平衡树？
 
 ### Elasticsearch
 
