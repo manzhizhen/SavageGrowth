@@ -27,6 +27,7 @@
     - [NoSQL](#NoSQL)
         - [Redis](#Redis)
         - [Elasticsearch](#Elasticsearch)
+    - [NewSQL](#NewSQL)
 - [分布式系统](#分布式系统)
     - [常见的一致性算法（共识算法）](#常见的一致性算法（共识算法）)
         - [2PC&3PC](#2PC&3PC)
@@ -671,6 +672,14 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 
 **参考资料：** 
 
+## NewSQL
+### TiDB
+TiDB（“Ti”代表 Titanium）是一个开源的 NewSQL 数据库，支持混合事务和分析处理 (HTAP) 工作负载。它兼容 MySQL，具有水平可扩展性、强一致性和高可用性。
+
+#### 参考资料
+* https://github.com/pingcap/tidb
+* https://docs.pingcap.com/tidb/stable/basic-features
+* https://pingcap.com/zh/case/user-case-zhihu TiDB在知乎万亿量级业务数据下的实践 
 
 # 分布式系统
 
