@@ -242,6 +242,7 @@
 * https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-concurrency-model
 * https://www.baeldung.com/spring-webflux-concurrency
 * https://piotrminkowski.com/2020/03/30/a-deep-dive-into-spring-webflux-threading-model/
+* https://doc.akka.io/docs/akka/current/general/actors.html
 
 
 # 云
