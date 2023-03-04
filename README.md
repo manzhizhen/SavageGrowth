@@ -226,10 +226,10 @@
 * 与 RxJava 相比，Reactor 维护的所有流程和 API 都得到了增强和高效，但在实现方面仍然可以很好地满足需求。
 
 **参考资料：**<br />
+* https://www.infoq.com/articles/reactor-by-example/ 这个讲了很多Reactor和RxJava的关系
 * https://www.reactivemanifesto.org/
 * https://www.reactive-streams.org/
 * https://reactivex.io/
-* https://www.infoq.com/articles/reactor-by-example/
 * https://projectreactor.io/
 * https://www.educba.com/rxjava-vs-reactor/
 * https://github.com/reactor/reactor-core
