@@ -229,6 +229,7 @@
 * https://www.reactivemanifesto.org/
 * https://www.reactive-streams.org/
 * https://reactivex.io/
+* https://www.infoq.com/articles/reactor-by-example/
 * https://projectreactor.io/
 * https://www.educba.com/rxjava-vs-reactor/
 * https://github.com/reactor/reactor-core
@@ -666,6 +667,11 @@ MySQL: 数据库 --> 数据表 --> 行 --> 列
 建立在Apache Lucene之上、分布式、高可用、多租户、API丰富、面向文档；
 **配合使用**<br />
 Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展现）
+
+#### Elasticsearch保证高可用性的方式
+* 方式一：副本分片。主分片失效后，副本分片会被提升为主分片。
+* 方式二：跨集群复制主从同步。简称：CCR，指的是索引数据从一个 Elasticsearch 集群复制到另一个 Elasticsearch 集群。对于主集群的索引数据的任何修改都会直接复制同步到从索引集群。
+* 方式三：快照。快照在给定时刻对集群或者索引按了暂停键且拍摄了当时的全部“照片”。这样，当在之后的某个时间点，倘若集群或索引出现故障，可以基于之前的快照进行快速恢复。
 
 **扩展知识点：** HyperLogLog<br />
 
