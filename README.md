@@ -27,6 +27,7 @@
     - [NoSQL](#NoSQL)
         - [Redis](#Redis)
         - [Elasticsearch](#Elasticsearch)
+    - [NewSQL](#NewSQL)
 - [分布式系统](#分布式系统)
     - [常见的一致性算法（共识算法）](#常见的一致性算法（共识算法）)
         - [2PC&3PC](#2PC&3PC)
@@ -242,6 +243,7 @@
 * https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-concurrency-model
 * https://www.baeldung.com/spring-webflux-concurrency
 * https://piotrminkowski.com/2020/03/30/a-deep-dive-into-spring-webflux-threading-model/
+* https://doc.akka.io/docs/akka/current/general/actors.html
 
 
 # 云
@@ -677,6 +679,14 @@ Logstash|Beats（收集） + Elasticsearch（存储、分析） + Kibana（展�
 
 **参考资料：** 
 
+## NewSQL
+### TiDB
+TiDB（“Ti”代表 Titanium）是一个开源的 NewSQL 数据库，支持混合事务和分析处理 (HTAP) 工作负载。它兼容 MySQL，具有水平可扩展性、强一致性和高可用性。
+
+#### 参考资料
+* https://github.com/pingcap/tidb
+* https://docs.pingcap.com/tidb/stable/basic-features
+* https://pingcap.com/zh/case/user-case-zhihu TiDB在知乎万亿量级业务数据下的实践 
 
 # 分布式系统
 
@@ -1562,7 +1572,9 @@ WebSockets 可以使网页动态和交互。但是，在许多情况下，Ajax �
 
 ## 淘汰算法
 ### 最近最少使用(LRU)
-最近最少使用(Least Recently Used)：是大部分操作系统为最大化页面命中率而广泛采用的一种页面置换算法。该算法的思路是，发生缺页中断时，选择未使用时间最长的页面置换出去。
+最近最少使用(Least Recently Used)：这个缓存算法将最近使⽤的条⽬存放到靠近缓存顶部的位置。当⼀个新条⽬被访问时，LRU将它放置到缓存的顶部。当缓存达到极限时，较
+早之前访问的条⽬将从缓存底部开始被移除。这⾥会使⽤到昂贵的算法，⽽且它需要记录“年龄位”来精确显⽰条⽬是何时被访问的。此外，当⼀个LRU缓存算法删除某个条⽬后，“年龄位”将随其他条⽬发⽣改变。
 
 ### 最不经常使用(LFU)
-最不经常使用(Least Frequently Used)：要求在页置换时置换引用计数最小的页，因为经常使用的页应该有一个较大的引用次数。但是有些页在开始时使用次数很多，但以后就不再使用，这类页将会长时间留在内存中，因此可以将引用计数寄存器定时右移一位，形成指数衰减的平均使用次数。
+最不经常使用(Least Frequently Used)：这个缓存算法使⽤⼀个计数器来记录条⽬被访问的频率。通过使⽤LFU缓存算法，最低访问数的条⽬⾸先被移除。这个⽅法并不经常使⽤，
+因为它⽆法对⼀个拥有最初⾼访问率之后长时间没有被访问的条⽬缓存负责。
