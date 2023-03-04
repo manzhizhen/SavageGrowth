@@ -228,6 +228,7 @@
 
 **参考资料：**<br />
 * https://www.infoq.com/articles/reactor-by-example/ 这个讲了很多Reactor和RxJava的关系
+* https://www.infoq.com/articles/rxjava-by-example/
 * https://www.reactivemanifesto.org/
 * https://www.reactive-streams.org/
 * https://reactivex.io/
