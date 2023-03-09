@@ -78,7 +78,8 @@
 - [数据结构](#数据结构)
     - [BitMap](#BitMap)    
 - [算法](#算法)
- 
+- [AIGC](#AIGC)
+    - [StableDiffusion](#StableDiffusion)
  
    
 # 架构设计
@@ -1580,3 +1581,8 @@ WebSockets 可以使网页动态和交互。但是，在许多情况下，Ajax �
 ### 最不经常使用(LFU)
 最不经常使用(Least Frequently Used)：这个缓存算法使⽤⼀个计数器来记录条⽬被访问的频率。通过使⽤LFU缓存算法，最低访问数的条⽬⾸先被移除。这个⽅法并不经常使⽤，
 因为它⽆法对⼀个拥有最初⾼访问率之后长时间没有被访问的条⽬缓存负责。
+
+
+# AIGC
+## StableDiffusion
+下载地址：https://stable-diffusion-ui.github.io/docs/installation/
