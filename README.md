@@ -227,7 +227,22 @@
 * 如果以工具的成熟度来判断，那么与 Reactor 相比，推荐的工具将是 RxJava，因为它已在许多项目中使用，因为它具有许多开发人员喜欢的功能。Reactor虽然也自带了很多场景下开发者需要的很多特性，但与RxJava相比，它并不能满足需求。
 * 与 RxJava 相比，Reactor 维护的所有流程和 API 都得到了增强和高效，但在实现方面仍然可以很好地满足需求。
 
+### Why was Spring WebFlux created?
+Part of the answer is the need for a non-blocking web stack to handle concurrency with a small number of threads and scale with fewer hardware resources. Servlet non-blocking I/O leads away from the rest of the Servlet API, where contracts are synchronous (Filter, Servlet) or blocking (getParameter, getPart). This was the motivation for a new common API to serve as a foundation across any non-blocking runtime. That is important because of servers (such as Netty) that are well-established in the async, non-blocking space.
+The other part of the answer is functional programming. Much as the addition of annotations in Java 5 created opportunities (such as annotated REST controllers or unit tests), the addition of lambda expressions in Java 8 created opportunities for functional APIs in Java. This is a boon for non-blocking applications and continuation-style APIs (as popularized by CompletableFuture and ReactiveX) that allow declarative composition of asynchronous logic. At the programming-model level, Java 8 enabled Spring WebFlux to offer functional web endpoints alongside annotated controllers.
+
+### Define “Reactive”
+We touched on “non-blocking” and “functional” but what does reactive mean? <br />
+The term, “reactive,” refers to programming models that are built around reacting to change network components reacting to I/O events, UI controllers reacting to mouse events, and others. In that sense, non-blocking is reactive, because, instead of being blocked, we are now in the mode of reacting to notifications as operations complete or data becomes available.
+There is also another important mechanism that we on the Spring team associate with “reactive” and that is non-blocking back pressure. In synchronous, imperative code, blocking calls serve as a natural form of back pressure that forces the caller to wait. In non-blocking code, it becomes important to control the rate of events so that a fast producer does not overwhelm its destination.
+Reactive Streams is a small spec (also adopted in Java 9) that defines the interaction between asynchronous components with back pressure. For example a data repository (acting as Publisher) can produce data that an HTTP server (acting as Subscriber) can then write to the response. The main purpose of Reactive Streams is to let the subscriber control how quickly or how slowly the publisher produces data.
+
+### Common question
+what if a publisher cannot slow down? <br />
+The purpose of Reactive Streams is only to establish the mechanism and a boundary. If a publisher cannot slow down, it has to decide whether to buffer, drop, or fail.
+
 **参考资料：**<br />
+* https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-httphandler
 * https://www.infoq.com/articles/reactor-by-example/ 这个讲了很多Reactor和RxJava的关系
 * https://www.infoq.com/articles/rxjava-by-example/
 * https://www.reactivemanifesto.org/
