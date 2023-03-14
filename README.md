@@ -1602,3 +1602,8 @@ WebSockets 可以使网页动态和交互。但是，在许多情况下，Ajax �
 # AIGC
 ## StableDiffusion
 下载地址：https://stable-diffusion-ui.github.io/docs/installation/
+
+## ChatGPT
+### 参考资料
+* https://www.anaconda.com/
+* https://github.com/microsoft/visual-chatgpt
