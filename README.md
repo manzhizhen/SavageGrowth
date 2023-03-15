@@ -1604,6 +1604,9 @@ WebSockets 可以使网页动态和交互。但是，在许多情况下，Ajax �
 下载地址：https://stable-diffusion-ui.github.io/docs/installation/
 
 ## ChatGPT
+### windows安装wget
+从https://eternallybored.org/misc/wget/下载wget.ext后，不是双击安装，而是放到git的安装bin目录下（例如：D:\Git\mingw64\bin）
+
 ### 参考资料
 * https://www.anaconda.com/
 * https://github.com/microsoft/visual-chatgpt
