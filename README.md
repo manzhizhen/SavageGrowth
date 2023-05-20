@@ -246,10 +246,11 @@ The purpose of Reactive Streams is only to establish the mechanism and a boundar
 * https://www.infoq.com/articles/reactor-by-example/ 这个讲了很多Reactor和RxJava的关系
 * https://rxmarbles.com/ 弹珠图集合
 * https://www.infoq.com/articles/rxjava-by-example/
-* https://www.reactivemanifesto.org/
-* https://www.reactive-streams.org/
-* https://reactivex.io/
-* https://projectreactor.io/
+* https://www.reactivemanifesto.org/ 响应式宣言
+* https://www.reactive-streams.org/ Java的标准化通过Reactive Streams工作出现了，该规范为JVM上的反应库定义了一组接口和交互规则。它的接口已经在Flow类下集成到Java 9中。
+* https://reactivex.io/ Rx官网（例如RxJava）
+* https://projectreactor.io/ Reactor官网
+* https://projectreactor.io/docs/core/release/reference/ Reactor官网中介绍响应式编程
 * https://www.educba.com/rxjava-vs-reactor/
 * https://github.com/reactive-streams
 * https://github.com/reactor/reactor-core
