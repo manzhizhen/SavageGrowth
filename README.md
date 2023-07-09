@@ -1611,3 +1611,8 @@ WebSockets 可以使网页动态和交互。但是，在许多情况下，Ajax �
 ### 参考资料
 * https://www.anaconda.com/
 * https://github.com/microsoft/visual-chatgpt
+
+
+# IM框架
+* https://github.com/52im/fastim2023
+* https://github.com/XiaoWeiKIN/hermes
