@@ -496,7 +496,7 @@ Redis是一种采用内存来作为数据结构存储的数据库、缓存和消
 Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如Linux，* BSD，OS X，而无需外部依赖。Linux和OS X是Redis开发和测试最多的两个操作系统，我们建议使用Linux进行部署。<br/>
 
 #### 支持的数据结构
-字符串，哈希，列表，集合，带范围查询的排序集合，位图，HyperLogLog，地理空间索引。<br/>
+String，List，Set，Hash，Sorted Set, Stream(Redis 5.0才有)，Geospatial indexes（地理空间索引），Bitmaps等。<br/>
 
 #### 内部数据结构
 简单动态字符串(Simple Dynamic Strings, SDS)、双端链表、跳跃表(skiplist)、压缩列表、快速列表(Redis3.2引入，quicklist)、字典(散列表)、整数集合(intset)。
@@ -513,6 +513,9 @@ Redis是用ANSI C编写，并且可以在大多数POSIX系统中使用，例如L
 实际上，Redis中Sorted Set的实现是这样的：
 * 当数据较少时，sorted set是由一个ziplist来实现的。
 * 当数据多的时候，sorted set是由一个dict + 一个skiplist来实现的。简单来讲，dict用来查询数据到分数的对应关系(例如zscore的查询)，而skiplist用来根据分数查询数据（可能是范围查找）。
+
+#### Redis Pipeline
+当客户端使用管道发送命令时，服务器将被迫使用内存对回复进行排队。因此，如果您需要通过管道发送大量命令，最好将它们分批发送，每个批次包含合理的数量，例如 10k 个命令，读取回复，然后再次发送另外 10k 个命令，依此类推。速度几乎相同，但使用的额外内存最多是对这 10k 命令的回复进行排队所需的内存量。
 
 #### Redis是单线程的。如何利用多个多核CPU？
 CPU成为Redis瓶颈的情况并不常见，因为Redis通常是内存或网络绑定的。例如，在一个普通的Linux系统上运行的流水线Redis每秒甚至可以传递100万个请求，所以如果您的应用程序主要使用O（N）或O（log（N））命令，它几乎不会占用太多的CPU。
@@ -571,10 +574,15 @@ Redis官方提供的高可用方案分为Redis Sentinel和Redis Cluster两种。
 
 ![Redis哨兵](https://user-images.githubusercontent.com/6687462/159384118-9c7b5054-2dc0-4e72-93f3-efea36cbf0a0.png)
 
-**Redis Cluster**<br/>
+** Redis Cluster **<br/>
 Redis Cluster 提供了一种运行 Redis 的方法，其中数据 自动分片到多个 Redis 节点。Redis Cluster 还在分区期间提供了一定程度的可用性，即在某些节点发生故障或无法通信时继续操作的能力。但是，如果发生较大故障（例如，当大多数主服务器不可用时），集群将停止运行。
 
-*Redis Cluster 不使用一致性散列，而是使用不同形式的分片*，其中每个键在概念上都是我们所谓的散列槽的一部分。 Redis 集群中有 16384 个哈希槽，要计算给定键的哈希槽是多少，我们只需将键的 CRC16 取模 16384。
+Redis 集群 TCP 端口
+每个Redis 集群节点都需要两个开放的TCP 连接：一个用于为客户端提供服务的Redis TCP 端口（例如6379）和第二个端口（称为集群总线端口）。默认情况下，集群总线端口是通过在数据端口上加10000来设置的（例如16379）；但是，您可以在配置中覆盖它cluster-port。
+
+集群总线是一种使用二进制协议的节点到节点的通信通道，由于带宽和处理时间较小，更适合在节点之间交换信息。节点使用集群总线进行故障检测、配置更新、故障转移授权等。客户端永远不应尝试与集群总线端口进行通信，而应使用 Redis 命令端口。但是，请确保在防火墙中打开这两个端口，否则 Redis 集群节点将无法通信。
+
+* Redis Cluster 不使用一致性哈希，而是使用不同形式的分片 * ，其中每个键在概念上都是我们所谓的散列槽的一部分。 Redis 集群中有 16384 个哈希槽，要计算给定键的哈希槽是多少，我们只需将键的 CRC16 取模 16384。
 Redis 集群中的每个节点都负责哈希槽的子集，例如，您可能有一个具有3个节点的集群，其中：
 * 节点 A 包含从 0 到 5500 的哈希槽。
 * 节点 B 包含从 5501 到 11000 的哈希槽。
@@ -584,7 +592,7 @@ Redis 集群中的每个节点都负责哈希槽的子集，例如，您可能�
 Redis Cluster 支持多个 key 操作，只要涉及到单个命令执行（或整个事务，或 Lua 脚本执行）的所有 key 都属于同一个 hash slot。用户可以通过使用称为哈希标签的概念来强制多个键成为同一个哈希槽的一部分。
 哈希标签记录在 Redis Cluster 规范中，但要点是，如果键中的 {} 括号之间有子字符串，则仅对字符串内的内容进行哈希处理，例如this{foo}key和another{foo}key 保证在同一个哈希槽中, 并且可以在具有多个键作为参数的命令中一起使用。
 
-*Redis Cluster 无法保证强一致性*。实际上，这意味着在某些情况下，Redis 集群可能会丢失系统向客户端确认的写入。 Redis Cluster 可能丢失写入的第一个原因是因为它使用异步复制。这意味着在写入期间会发生以下情况：
+* Redis Cluster 无法保证强一致性 * 。实际上，这意味着在某些情况下，Redis 集群可能会丢失系统向客户端确认的写入。 Redis Cluster 可能丢失写入的第一个原因是因为它使用异步复制。这意味着在写入期间会发生以下情况：
 * 您的客户写信给主 B。
 * 主 B 向您的客户回复 OK。
 * 主节点 B 将写入传播到其副本 B1、B2 和 B3。
@@ -654,10 +662,12 @@ Redisson是Redis主流的Java客户端之一，相比Jedis原封不动的包装R
 ```
 
 **参考资料**
+* https://redis.io/docs/manual/pipelining/ Redis Pipeline
 * https://www.jianshu.com/p/c2841d65df4c
 * https://redis.io/
 * https://redis.io/topics/distlock
-* https://redis.io/topics/cluster-tutorial
+* https://redis.io/docs/management/scaling/   Redis Cluster
+* https://redis.io/docs/reference/cluster-spec/  Redis Cluster 规范
 * https://www.jianshu.com/p/7e47a4503b87
 * https://blog.tienyulin.com/redis-master-slave-replication-sentinel-cluster/
 * http://doc.redisfans.com/
@@ -771,20 +781,19 @@ Raft将系统中的角色分为领导者（Leader）、跟从者（Follower）�
 3. 如果发现其他节点比自己更加新，则主动切换为follower。
 
 #### 选举过程
-follower 在 timeout 时间内，没有收到来自 leader 的心跳，则会发起选举：
-1. 增加节点本地的 current term, 切换为 candidate 状态
-2. 投自己一票
-3. 并行的发送给其他节点 RequestVotes RPCs
-4. 等待其他节点的回复：
-   a. 收到了 大多数选票（majority )，那么赢得选举，切换状态为 leader
-   b. 被告知别人已经当选，则切换为 follower
-   c. 一段时间还是没有收到 majority 的投票结果，保持 candidate 状态，重新发出选举。
+follower 在 timeout 时间内，没有收到来自 leader 的心跳，则会发起选举：<br />
+1. 增加节点本地的 current term, 切换为 candidate 状态<br />
+2. 投自己一票<br />
+3. 并行的发送给其他节点 RequestVotes RPCs<br />
+4. 等待其他节点的回复：<br />
+   a. 收到了 大多数选票（majority )，那么赢得选举，切换状态为 leader<br />
+   b. 被告知别人已经当选，则切换为 follower<br />
+   c. 一段时间还是没有收到 majority 的投票结果，保持 candidate 状态，重新发出选举。<br />
 每个任期，一个节点只能投票一次，候选人知道的信息不能比自己少，fisrtcome- first-serverd 先到先得。
 
 系统中只会存在一个leader, 如果一段时间内没有 leader, 那么大家通过选举的方式选出 leader. leader 不停的向 follower 发出心跳，表明leader的存活状态，如果leader故障，follower会切换成candidate选举出新leader。
 
 #### 如何防止脑裂
-这个存疑，感觉不太对
 1. 一个节点某一任期内最多只能投一票；
 2. 只有获得大多数选票才能成为领导人；
 
@@ -1525,6 +1534,7 @@ TCP的4种拥塞控制算法(慢开始、拥塞避免、快重传、快恢复)�
 3. HOST域：在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname），HTTP1.0没有host域。随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。HTTP1.1的请求消息和响应消息都支持host域，且请求消息中如果没有host域会报告一个错误（400 Bad Request）。
 4. 缓存处理：在HTTP1.0中主要使用header里的If-Modified-Since,Expires来做为缓存判断的标准，HTTP1.1则引入了更多的缓存控制策略例如Entity tag，If-Unmodified-Since, If-Match, If-None-Match等更多可供选择的缓存头来控制缓存策略。
 5. 新增多个错误码：在HTTP1.1中新增了24个错误状态响应码，如409（Conflict）表示请求的资源与资源的当前状态发生冲突；410（Gone）表示服务器上的某个资源被永久性的删除。
+6. 新增了六种请求方法：OPTIONS、PUT、PATCH、DELETE、TRACE 和 CONNECT 方法。
 
 ### HTTP1.1和HTTP2.0的区别
 1. 多路复用：客户端和服务端可以并行发起或者回复，避免串行带来的阻塞。做到同一个连接并发处理多个请求，而且并发请求的数量比HTTP1.1大了好几个数量级。HTTP1.1也可以多建立几个TCP连接，来支持处理更多并发的请求，但是创建TCP连接本身也是有开销的。
