@@ -21,6 +21,7 @@
     - [云原生](#云原生)
     - [Service Mesh](#ServiceMesh(服务网格))
     - [Serverless](#Serverless(无服务器))
+    - [Quarkus](#Quarkus)
 - [存储](#存储)
     - [RDS](#RDS)
         - [MySQL](#MySQL)
@@ -340,6 +341,48 @@ Serverless利用现代云计算功能和抽象的优势，让您专注于业务�
 **参考资料：**<br />
 * https://spring.io/serverless
 * https://developer.aliyun.com/article/574222
+
+## Quarkus
+Quarkus 是一个开源的 Java 应用程序框架，旨在为构建基于云原生架构的低内存占用、高启动速度、高性能的微服务提供支持。它支持多种编程语言和框架，包括 Java、Kotlin、Scala、Vert.x 和 Spring，可以在多种云环境中运行，包括 Kubernetes 和 OpenShift。Quarkus 还提供了一些工具和扩展，使开发者可以更轻松地构建、测试和部署应用程序。
+
+Quarkus 可以单独使用而不依赖于 Kubernetes，它可以在任何支持 Java 运行时的环境中运行，例如本地计算机、虚拟机或云服务器。Quarkus 还提供了多种构建和部署选项，如使用 Docker 镜像、JAR 包或原生二进制文件等，可以根据需要选择最适合的部署方式。因此，Quarkus 可以适用于各种不同的应用场景和部署环境。
+
+要在 Maven 项目中使用 Quarkus，需要在项目的 pom.xml 文件中添加 Quarkus 的依赖项。以下是添加 Quarkus 依赖项的基本步骤：
+
+打开项目的 pom.xml 文件。
+在 dependencies 标签中添加以下依赖项：
+<dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-resteasy</artifactId>
+<version>2.2.2.Final</version>
+</dependency>
+这将添加一个名为 quarkus-resteasy 的依赖项，它包含了 Quarkus 中用于构建 RESTful Web 服务的核心组件。
+
+如果需要使用其他 Quarkus 扩展功能，可以根据需要添加其他依赖项。例如，如果需要使用 Quarkus 中的数据库访问功能，可以添加以下依赖项：
+<dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-jdbc-postgresql</artifactId>
+<version>2.2.2.Final</version>
+</dependency>
+这将添加一个名为 quarkus-jdbc-postgresql 的依赖项，它包含了 Quarkus 中用于访问 PostgreSQL 数据库的扩展功能。
+
+Quarkus 是一款新型的 Java 应用程序框架，拥有以下几个优势：<br />
+1. 快速启动时间：Quarkus 使用了一系列的优化技术，使得应用程序的启动时间可以缩短到几百毫秒级别，这对于云原生应用场景非常有利。
+2. 低内存占用：Quarkus 在设计上非常注重内存占用，可以在极低的内存占用下运行，这对于云原生应用场景也非常有利。
+3. 高性能：Quarkus 采用了一系列的优化技术，使得应用程序的性能可以得到很大的提升，例如使用 GraalVM 进行 AOT 编译、使用 Reactive 编程模型等。
+4. 易于开发：Quarkus 提供了丰富的开发工具和插件，使得开发者可以更加高效地进行开发和调试。
+5. 强大的扩展性：Quarkus 提供了丰富的扩展功能，可以轻松地集成各种不同的技术栈，例如数据库、消息队列、缓存等。
+6. 高度可配置：Quarkus 提供了大量的可配置选项，可以根据需求灵活地进行配置，例如容器化、部署方式、日志记录等。
+综上所述，Quarkus 具有快速启动时间、低内存占用、高性能、易于开发、强大的扩展性和高度可配置等优势，在云原生应用场景下表现出色。
+
+
+**Quarkus能使Java应用程序启动更快吗？为什么?**<br />
+是的，Quarkus 能够使 Java 应用程序启动更快。 Quarkus 采用了多种技术优化 Java 应用程序的启动时间，包括：
+1. 基于 SubstrateVM 的 AOT 编译：Quarkus 使用 GraalVM 的 SubstrateVM 对应用程序进行 AOT 编译，将应用程序编译成本地可执行文件，减少了应用程序的冷启动时间。
+2. 懒加载：Quarkus 可以根据需要懒加载应用程序的部分组件，减少了应用程序的启动时间。
+3. 小型容器：Quarkus 可以在小型容器中运行，减少了容器的启动时间。
+4. 轻量级框架：Quarkus 的设计非常注重轻量级和精简，减少了框架本身的启动时间和内存占用。
+上述优化措施使得 Quarkus 应用程序的启动时间可以缩短到几百毫秒级别，甚至更短。这对于云原生应用场景非常有利，可以更快地响应用户请求，提升用户体验。
 
 # 存储
 
