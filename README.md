@@ -76,12 +76,13 @@
 - [网络](#网络)
     - [TCP](#TCP)
     - [HTTP](#HTTP)
+    - [QUIC](#QUIC)
 - [数据结构](#数据结构)
     - [BitMap](#BitMap)    
 - [算法](#算法)
 - [AIGC](#AIGC)
     - [StableDiffusion](#StableDiffusion)
- 
+- [硬件](#硬件)
    
 # 架构设计
 ## 架构的定义
@@ -1623,6 +1624,45 @@ WebSockets 可以使网页动态和交互。但是，在许多情况下，Ajax �
 * https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#websocket
 * https://datatracker.ietf.org/doc/html/rfc6455
 
+## RSocket
+RSocket是在2018年发布的。RSocket最初是由Netifi公司和Facebook公司合作开发的，旨在解决网络通信协议不足的问题，并针对互联网应用和分布式系统做了优化。RSocket协议随后被开源并加入到Reactive Foundation，得到了广泛的关注和应用。
+RSocket是一种异步、消息驱动、全双工的网络通信协议，旨在解决传统网络协议不足的问题。它提供了一种可靠、高效、灵活的通信机制，适用于多种应用场景。
+RSocket提供了四种通信模式：请求/响应、请求/流、流/响应和流/流，可以满足不同的应用需求。在RSocket中，每个请求都是一个消息，可以携带任意数据类型，可以在请求头中指定通信协议版本、消息类型、序列化方式等信息。RSocket还支持各种负载均衡、流量控制和服务发现机制，可以让应用系统更加可靠和高效地运行。
+RSocket与传统的Socket协议不同。传统的Socket协议是面向连接的，即在通信之前需要建立连接，而RSocket协议则是无连接的。传统的Socket协议是单向的，即在通信时只能进行一方向的数据传输，而RSocket协议是全双工的，可以同时进行双向数据传输。传统的Socket协议是同步阻塞的，即在请求和响应之间需要等待，而RSocket协议是异步非阻塞的，可以提高系统的并发性和响应速度。
+总之，RSocket是一种新型的异步通信协议，具有可靠、高效、灵活等特点，可以适用于多种应用场景，特别适用于互联网应用和分布式系统。
+
+RSocket协议可以使用HTTP/2作为传输协议，从而可以获得HTTP/2的一些优点，例如多路复用、流量控制、头部压缩等。但RSocket协议不仅限于使用HTTP/2，也可以使用其他传输协议，如TCP、WebSocket等。
+总之，RSocket和HTTP都是网络通信协议，但RSocket是一种新型的异步通信协议，与HTTP在设计和应用场景上有很大的差异。RSocket可以使用HTTP/2作为传输协议，但也可以使用其他传输协议。
+RSocket协议可以使用WebSocket作为传输协议，从而可以获得WebSocket的一些优点，例如实时性好、降低延迟等。RSocket协议与WebSocket的关系类似于HTTP/2和WebSocket的关系，即RSocket协议可以使用WebSocket作为底层传输协议，提供更好的性能和可靠性。
+总之，RSocket和WebSocket都是用于实现双向通信的协议，但它们在设计和实现方式上有很大的差异。RSocket协议可以使用WebSocket作为传输协议，从而获得WebSocket的一些优点。
+
+
+在Java中使用RSocket需要引入RSocket库。RSocket库可以通过Maven等构建工具进行引入。以下是使用Maven引入RSocket库的示例：
+```xml
+<dependency>
+    <groupId>io.rsocket</groupId>
+    <artifactId>rsocket-core</artifactId>
+    <version>1.1.0</version>
+</dependency>
+```
+在引入RSocket库后，可以使用Java代码实现RSocket通信。以下是一个简单的RSocket客户端实例：
+
+```java
+RSocket rsocket = RSocketConnector.connectWith(TcpClientTransport.create("localhost", 7000)).block();
+
+Mono<Payload> response = rsocket.requestResponse(DefaultPayload.create("Hello RSocket!"));
+
+response.subscribe(payload -> {
+    System.out.println("Response: " + payload.getDataUtf8());
+});
+
+rsocket.dispose();
+```
+该示例中，首先通过RSocketConnector建立与RSocket服务器的TCP连接，并创建一个RSocket实例。然后，使用requestResponse方法发送请求消息，并使用subscribe方法订阅响应消息。最后，使用dispose方法关闭RSocket连接。
+除了上述示例中的requestResponse方法外，RSocket还提供了其他的通信方法，例如requestStream、requestChannel等。每种通信方法都有不同的使用方式和适用场景。需要根据具体需求来选择合适的通信方法。
+总之，RSocket是一种新型的异步通信协议，在Java中使用RSocket需要引入RSocket库，并根据具体需求来选择合适的通信方法。
+
+
 # 数据结构
 ## BitMap
 
@@ -1664,6 +1704,15 @@ WebSockets 可以使网页动态和交互。但是，在许多情况下，Ajax �
 ### 参考资料
 * https://www.anaconda.com/
 * https://github.com/microsoft/visual-chatgpt
+
+# 硬件
+## CPU
+CPU周期和CPU时钟都是计算机中处理器（CPU）的重要概念，它们的区别和联系如下：
+1. CPU周期：CPU周期是指CPU执行一条指令所需的时间，包括取指令时间、指令译码时间、执行时间和写回结果时间等。CPU周期的长短决定了CPU的性能，一个CPU周期越短，处理器的执行效率就越高。
+2. CPU时钟：CPU时钟是指处理器中的时钟信号，用于同步CPU内部各个部件的工作，是CPU周期的基础。CPU时钟的频率越高，说明处理器的工作速度越快。
+CPU周期和CPU时钟的关系是，CPU周期与CPU时钟频率的倒数成反比。也就是说，如果CPU时钟频率提高，CPU周期时间就会变短。例如，如果CPU的时钟频率为1GHz，那么每秒会产生10^9个时钟信号，每个时钟信号对应一个CPU周期，每个CPU周期时间为1/10^9秒，即1纳秒。
+总之，CPU周期和CPU时钟都是计算机中处理器的重要概念，CPU周期是CPU执行一条指令所需的时间，CPU时钟是处理器中的时钟信号，用于同步CPU内部各个部件的工作。CPU周期与CPU时钟频率的倒数成反比，两者共同决定了CPU的性能
+
 
 
 # IM框架
