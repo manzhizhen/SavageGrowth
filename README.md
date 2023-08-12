@@ -70,12 +70,15 @@
     - [Java对象锁](#Java对象锁)
     - [Java引用](#Java引用) 
     - [多线程](#多线程) 
+    - [Loom](#Loom)
     - [I/O](#I/O)     
     - [零拷贝](#零拷贝)       
     - [伪共享](#伪共享)     
 - [网络](#网络)
     - [TCP](#TCP)
     - [HTTP](#HTTP)
+    - [WebSocket](#WebSocket)
+    - [RSocket](#RSocket)
     - [QUIC](#QUIC)
 - [数据结构](#数据结构)
     - [BitMap](#BitMap)    
@@ -1427,6 +1430,13 @@ JMM规定了所有的变量都存储在主内存（Main Memory）中。每个线
 
 JMM是围绕着并发编程中**原子性**、**可见性**、**有序性**这三个特征来建立的.
 
+## Loom
+Loom是Java语言中的一个新项目，旨在通过增强Java的并发性能和可扩展性来提高Java开发者的生产力。Loom的主要目标是为Java引入“协程”（Coroutine）的概念，将协程作为并发模型的一种选择，以取代Java语言中现有的线程和锁机制。
+协程是一种轻量级的线程，它可以在一个或多个线程之间切换，但不需要线程上下文切换所需的开销。协程可以更好地利用CPU资源、减少内存占用和提高程序的性能。Loom的协程实现将基于Java的Fiber API，使用Java的协程可以像普通的方法调用一样简单，避免了线程和锁带来的复杂性和性能问题。
+除了协程，Loom还引入了一些其他的新特性，如Virtual Threads、Continuations和Async IO等，以提高Java的并发性能和可扩展性，使Java更加适合处理高并发的任务。
+总之，Loom是Java语言中的一个新项目，旨在通过增强Java的并发性能和可扩展性来提高Java开发者的生产力。Loom引入协程的概念，提高了Java的并发性能和可扩展性，同时还引入了其他的新特性，如Virtual Threads、Continuations和Async IO等，以更好地满足Java程序开发者的需求。
+https://openjdk.org/projects/loom/
+
 ## I/O
 ### 用户空间与内核空间
 针对 Linux 操作系统而言，最高的 1G 字节(从虚拟地址 0xC0000000 到 0xFFFFFFFF)由内核使用，称为内核空间。而较低的 3G 字节(从虚拟地址 0x00000000 到 0xBFFFFFFF)由各个进程使用，称为用户空间。
@@ -1661,6 +1671,15 @@ rsocket.dispose();
 该示例中，首先通过RSocketConnector建立与RSocket服务器的TCP连接，并创建一个RSocket实例。然后，使用requestResponse方法发送请求消息，并使用subscribe方法订阅响应消息。最后，使用dispose方法关闭RSocket连接。
 除了上述示例中的requestResponse方法外，RSocket还提供了其他的通信方法，例如requestStream、requestChannel等。每种通信方法都有不同的使用方式和适用场景。需要根据具体需求来选择合适的通信方法。
 总之，RSocket是一种新型的异步通信协议，在Java中使用RSocket需要引入RSocket库，并根据具体需求来选择合适的通信方法。
+
+## QUIC
+QUIC（Quick UDP Internet Connection）是一种基于UDP协议的快速网络传输协议，由Google公司开发。QUIC旨在取代TCP协议，提供更快、更可靠、更安全的网络传输服务。
+QUIC的优势有以下几个方面：
+1. 快速连接建立：QUIC使用了0-RTT（Zero Round Trip Time）技术，可以在第一次连接时就进行身份验证，省去了TCP握手的开销，加快了连接的建立速度。
+2. 可靠传输：QUIC使用了基于流的传输协议，每个数据包都有独立的编号和确认机制，能够有效地避免数据包的丢失和重传，提高了传输的可靠性。
+3. 流量控制和拥塞控制：QUIC支持流量控制和拥塞控制，可以自动调整数据包的发送速率，避免网络拥塞和数据包丢失，提高了网络传输的效率和可靠性。
+4. 安全性：QUIC使用了TLS加密技术，能够保证数据的安全性和隐私性，有效地避免了中间人攻击和数据泄露等安全问题。
+总之，QUIC是一种基于UDP协议的快速网络传输协议，具有快速连接建立、可靠传输、流量控制和拥塞控制、安全性等优势。QUIC的目标是取代TCP协议，提供更快、更可靠、更安全的网络传输服务，已经被越来越多的网站和应用所采用。
 
 
 # 数据结构
