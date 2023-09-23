@@ -1682,6 +1682,13 @@ QUIC的优势有以下几个方面：
 4. 安全性：QUIC使用了TLS加密技术，能够保证数据的安全性和隐私性，有效地避免了中间人攻击和数据泄露等安全问题。
 总之，QUIC是一种基于UDP协议的快速网络传输协议，具有快速连接建立、可靠传输、流量控制和拥塞控制、安全性等优势。QUIC的目标是取代TCP协议，提供更快、更可靠、更安全的网络传输服务，已经被越来越多的网站和应用所采用。
 
+### 参考资料
+* https://developer.volcengine.com/articles/7268132377786843147   全面揭秘：抖音集团 QUIC 千万 QPS 应用实践
+* https://github.com/maufl/quic_toy/blob/master/performance.markdown     Performance evaluation 
+* https://cloud.tencent.com/developer/article/1031802      微信C2C渐进式图片流式传输系统简介
+* https://datatracker.ietf.org/doc/html/rfc9000#section-18.2
+* https://cloud.tencent.com/developer/article/1908451       提速 30%！腾讯TQUIC 网络传输协议
+* https://youle.zhipin.com/articles/0da7ce03c37bcc5bqxB72Nq7Fg~~.html   Trip.com APP QUIC 应用和优化实践
 
 # 数据结构
 ## BitMap
