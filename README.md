@@ -1683,6 +1683,7 @@ QUIC的优势有以下几个方面：
 总之，QUIC是一种基于UDP协议的快速网络传输协议，具有快速连接建立、可靠传输、流量控制和拥塞控制、安全性等优势。QUIC的目标是取代TCP协议，提供更快、更可靠、更安全的网络传输服务，已经被越来越多的网站和应用所采用。
 
 ### 参考资料
+* https://datatracker.ietf.org/doc/html/rfc9114
 * https://developer.volcengine.com/articles/7268132377786843147   全面揭秘：抖音集团 QUIC 千万 QPS 应用实践
 * https://github.com/maufl/quic_toy/blob/master/performance.markdown     Performance evaluation 
 * https://cloud.tencent.com/developer/article/1031802      微信C2C渐进式图片流式传输系统简介
