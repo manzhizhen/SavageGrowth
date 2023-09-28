@@ -1684,6 +1684,7 @@ QUIC的优势有以下几个方面：
 
 ### 参考资料
 * https://datatracker.ietf.org/doc/html/rfc9000 QUIC RFC
+* https://datatracker.ietf.org/doc/html/rfc9001 QUIC TLS
 * https://datatracker.ietf.org/doc/html/rfc9114 HTTP3 RFC
 * https://developer.volcengine.com/articles/7268132377786843147   全面揭秘：抖音集团 QUIC 千万 QPS 应用实践
 * https://github.com/maufl/quic_toy/blob/master/performance.markdown     Performance evaluation 
