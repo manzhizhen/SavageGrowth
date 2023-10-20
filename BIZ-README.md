@@ -18,4 +18,7 @@
 定义：Attribute-Based Access Control，基于属性的访问控制。在基于属性的访问控制中，权限不是根据角色授予的，
 而是根据用户或资源的一组属性授予的（例如，如果用户同时具有marketing和manager属性，他们可以发布和删除具有marketing属性的帖子，但其他人则不然）。
 
+## 参考资料
+* https://openfga.dev/docs/authorization-and-openfga
+
 
