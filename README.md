@@ -45,6 +45,8 @@
     - [MQ](#MQ)
       - [RocketMQ](#RocketMQ)
       - [Kafka](#Kafka)
+- [分布式追踪系统](#分布式追踪系统)
+    - [OpenTelemetry](#OpenTelemetry)
 - [Web服务器](#Web服务器)
     - [Nginx](#Nginx)
     - [Tomcat](#Tomcat)
@@ -1013,6 +1015,25 @@ Kafka版本[0.10.1.1]，已默认将消费的 offset 迁入到了 Kafka 一个�
 **参考资料**<br />
 * https://kafka.apache.org/documentation/#design
 * https://queue.acm.org/detail.cfm?id=1563874
+
+# 分布式追踪系统
+Distributed Tracing
+## OpenTelemetry
+OpenTelemetry is an Observability framework and toolkit designed to create and manage telemetry data such as traces, metrics, and logs. Crucially, OpenTelemetry is vendor- and tool-agnostic, meaning that it can be used with a broad variety of Observability backends, including open source tools like Jaeger and Prometheus, as well as commercial offerings. OpenTelemetry is a Cloud Native Computing Foundation (CNCF) project.
+
+OpenTelemetry, also known as OTel for short, is a vendor-neutral open source Observability framework for instrumenting, generating, collecting, and exporting telemetry data such as traces, metrics, logs.
+
+OpenTelemetry 是两个先前项目OpenTracing和OpenCensus合并的结果 。这两个项目都是为了解决同一个问题而创建的：缺乏如何检测代码并将遥测数据发送到可观察性后端的标准。然而，这两个项目都无法完全独立解决问题，因此这两个项目合并形成了 OpenTelemetry，这样它们就可以结合各自的优势并真正提供单一标准。
+
+### 关键术语
+* OTLP: The OpenTelemetry Protocol (OTLP) specification describes the encoding, transport, and delivery mechanism of telemetry data between telemetry sources, intermediate nodes such as collectors and telemetry backends.
+
+### 参考资料
+* https://opentelemetry.io/docs/what-is-opentelemetry/  what-is-opentelemetry
+* https://opentelemetry.io/docs/specs/otlp/  OTLP
+
+
+
 
 
 # Web服务器
