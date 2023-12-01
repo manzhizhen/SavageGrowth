@@ -1030,7 +1030,9 @@ OpenTelemetry 是两个先前项目OpenTracing和OpenCensus合并的结果 。�
 
 ### 参考资料
 * https://opentelemetry.io/docs/what-is-opentelemetry/  what-is-opentelemetry
-* https://opentelemetry.io/docs/specs/otlp/  OTLP
+* https://opentelemetry.io/docs/specs/otel/protocol/  OTLP
+* https://opentelemetry.io/docs/instrumentation/java/  A language-specific implementation of OpenTelemetry in Java.
+* https://opentelemetry.io/docs/collector/deployment/agent/ Why and how to send signals to collectors and from there to backends
 
 
 
