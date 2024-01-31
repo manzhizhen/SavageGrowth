@@ -221,6 +221,8 @@
 * 响应式（Reactive）的代码：它定义了一组用来处理数据的任务，但是这些任务可以并行地执行。每项任务处理数据的一部分子集，并将结果交给处理流程中的下一项任务，同时继续处理数据的另一部分子集。相对于要求将被处理的数据作为一个整体进行处理，响应式流可以在数据可用时立即开始处理。实际上，传入的数据可能是无限的（比如，一个某个地理位置的实时温度测量数据的恒定流）。
 常见的Java响应式库有RxJava，Project-Reactor，Mutiny（Quarkus），RxPY和RxGO都是响应式编程框架，用于在Python和Go语言中构建异步和反应式的应用程序。
 
+响应式编程（Reactive Programming）是一种基于使用异步和事件驱动来处理可观察数据流的编程范式，强调数据流的一致性和实时性。在这种编程模型中，程序会对数据流的变化做出反应，并能够自动地传播这些变化。响应式编程通常通过使用观察者模式（Observer pattern）来实现，它可以简化异步数据流的处理和管理，提高代码的可读性和可维护性。
+
 ### RxJava&Reactor
 ![RxJava-vs-Reactor](https://user-images.githubusercontent.com/6687462/162885783-3def0d9a-adf5-4cb0-88a1-053f528b0218.jpeg)
 以下是 RxJava 与 Reactor 之间的主要区别：
@@ -417,9 +419,9 @@ expain出来的信息有10列，分别是id、select_type、table、type、possi
 * Extra:执行情况的描述和说明
 
 #### MySQL8.0新特性
-1. 隐藏索引：隐藏索引的特性对于性能调试非常有用。在 8.0 中，索引可以被“隐藏”和“显示”。当一个索引隐藏时，它不会被查询优化器所使用。
+1. 隐藏索引：隐藏索引的特性对于性能调试非常有用。在 8.0 中，索引可以被“隐藏”和“显示”。当一个索引隐藏时，它不会被查询优化器所使用。也就是说，我们可以隐藏一个索引，然后观察对数据库的影响。如果数据库性能有所下降，就说明这个索引是有用的，于是将其“恢复显示”即可；如果数据库性能看不出变化，说明这个索引是多余的，可以删掉了。
 2. 设置持久化：MySQL 的设置可以在运行时通过 SET GLOBAL 命令来更改，但是这种更改只会临时生效，到下次启动时数据库又会从配置文件中读取。MySQL8新增了 SET PERSIST 命令，例如： SET PERSIST max_connections = 500; MySQL 会将该命令的配置保存到数据目录下的 mysqld-auto.cnf 文件中，下次启动时会读取该文件，用其中的配置来覆盖缺省的配置文件。
-3. 默认UTF-8编码：从 MySQL 8 开始，数据库的缺省编码将改为 utf8mb4，这个编码包含了所有 emoji 字符。 多少年来我们使用 MySQL 都要在编码方面小心翼翼，生怕忘了将缺省的 latin 改掉而出现乱码问题。从此以后就不用担心了。 也就是说，我们可以隐藏一个索引，然后观察对数据库的影响。如果数据库性能有所下降，就说明这个索引是有用的，于是将其“恢复显示”即可；如果数据库性能看不出变化，说明这个索引是多余的，可以删掉了。
+3. 默认UTF-8编码：从 MySQL 8 开始，数据库的缺省编码将改为 utf8mb4，这个编码包含了所有 emoji 字符。 多少年来我们使用 MySQL 都要在编码方面小心翼翼，生怕忘了将缺省的 latin 改掉而出现乱码问题。从此以后就不用担心了。 
 4. 通用表表达式（Common Table Expressions）：复杂的查询会使用嵌入式表，例如： SELECT t1.a1, t2.a2 FROM (SELECT col1 FROM table1) t1, (SELECT col2 FROM table2) t2; 而有了 CTE，我们可以这样写：
 WITH t1 AS (SELECT col1 FROM table1), t2 AS (SELECT col2 FROM table2) SELECT t1.a1, t2.a2 FROM t1, t2;  这样看上去层次和区域都更加分明，改起来也更清晰的知道要改哪一部分。
 5. 窗口函数（Window Functions）：MySQL 被吐槽最多的特性之一就是缺少 rank() 函数，当需要在查询当中实现排名时，必须手写@变量。但是从 8.0 开始，MySQL 新增了一个叫窗口函数的概念，它可以用来实现若干新的查询方式。 窗口函数有点像是 SUM()、COUNT() 那样的集合函数，但它并不会将多行查询结果合并为一行，而是将结果放回多行当中。也就是说，窗口函数是不需要 GROUP BY 的。
@@ -427,11 +429,15 @@ WITH t1 AS (SELECT col1 FROM table1), t2 AS (SELECT col2 FROM table2) SELECT t1.
 #### InnoDB的锁
 ##### 共享锁和独占锁
 InnoDB实现标准的行级锁定，其中有两种类型的锁， **共享锁(shared lock)** 和 **独占锁(exclusive lock)**。
-* 共享锁(S)：允许持有该锁的事务读取一行。例如 select * from T where id=1 lock in share mode;
-* 独占锁(X)：允许持有该锁的事务更新或删除一行。例如 select * from T where id=1 for update;
+* 共享锁(S)：允许持有该锁的事务读取一行，即其他会话可以读取被锁定的行，但是不能修改，直到当前事务结束。例如 select * from T where id=1 lock in share mode;
+* 独占锁(X)：允许持有该锁的事务更新或删除一行，其他会话不能读取或修改被锁定的行，直到当前事务结束。例如 select * from T where id=1 for update;
 
 ##### 意向锁(Intention Locks)
-意向锁是表级锁，它指示事务稍后对表中的行需要哪种类型的锁（共享或独占）。有两种类型的意图锁：
+意向锁（Intention Locks）是为了协调共享锁（Shared Locks）和排他锁（Exclusive Locks）的使用而存在的。意向锁是一种低级别的锁，用于表示事务准备在某个级别（如行级别或表级别）上设置锁定。它们并不是直接用来锁定数据的，而是用来表示某个事务打算在特定级别上设置锁。
+共享锁和排他锁是针对具体数据行或数据表的锁定，共享锁用于读操作，允许多个事务同时获取共享锁，而排他锁用于写操作，一次只允许一个事务获取排他锁。
+意向锁不会直接锁定数据，它们只是用来指示某个事务打算在更低级别上设置锁定。这种机制可以帮助数据库管理系统更有效地协调锁定，从而提高并发性能和减少死锁的风险。
+
+意向锁属于表级锁，有两种类型的意图锁：
 * 意向共享锁(IS)：表示事务打算在表中的各个行上设置 共享 锁 。
 * 意向排它锁(IX)：表示事务打算对表中的各个行设置排他锁。
 例如，SELECT ... FOR SHARE设置一个意向共享锁，并 SELECT ... FOR UPDATE设置一个意向排它锁。
@@ -1024,6 +1030,24 @@ OpenTelemetry is an Observability framework and toolkit designed to create and m
 OpenTelemetry, also known as OTel for short, is a vendor-neutral open source Observability framework for instrumenting, generating, collecting, and exporting telemetry data such as traces, metrics, logs.
 
 OpenTelemetry 是两个先前项目OpenTracing和OpenCensus合并的结果 。这两个项目都是为了解决同一个问题而创建的：缺乏如何检测代码并将遥测数据发送到可观察性后端的标准。然而，这两个项目都无法完全独立解决问题，因此这两个项目合并形成了 OpenTelemetry，这样它们就可以结合各自的优势并真正提供单一标准。
+
+### OpenTelemetry vs SkyWalking
+Apache SkyWalking 和 OpenTelemetry 是两个不同的开源项目，它们在应用程序性能监控（APM）和可观测性领域发挥作用，但它们的设计目标和使用方式有所区别。下面列出了它们之间的一些主要差异：<br />
+**Apache SkyWalking:**<br />
+SkyWalking 是一个完整的应用性能监控（APM）解决方案。它提供了端到端的服务追踪、服务性能分析、仪表盘展示等功能。
+它专注于对分布式系统的监控和诊断，尤其是在云原生架构（如微服务、容器、服务网格）中。
+SkyWalking 本身包含数据收集、存储、分析和可视化的全部组件。
+它提供了自己的一套代理和SDK来收集追踪和度量数据。
+虽然 SkyWalking 支持 OpenTracing 与 OpenCensus 数据模型，也在逐步支持 OpenTelemetry，但它是一个独立完整的系统。
+
+**OpenTelemetry:**<br />
+OpenTelemetry 是一个遥测数据收集框架，它是由 OpenTracing 和 OpenCensus 两个项目合并而来。
+作为一个框架，它为开发者提供了 API、SDK 以及一些工具，用于收集和传输应用程序和系统的追踪、指标和日志数据。
+OpenTelemetry 关注于标准化遥测数据的收集和传输方式，并且旨在成为行业标准。
+它不包含数据分析和可视化功能，但是可以将收集的数据发送到各种后端系统（如 Prometheus、Jaeger、Zipkin、Elasticsearch 等），这些系统可以对数据进行存储、分析和展示。
+OpenTelemetry 提供了一个多语言的生态系统，支持广泛的编程语言和框架。
+简而言之，SkyWalking 是一个完整的 APM 系统，提供了从数据收集到分析和可视化的一整套功能，而 OpenTelemetry 主要关注于作为一个通用的和可扩展的遥测数据收集框架，它可以将数据发送到各种兼容的后端处理系统。用户可以选择 OpenTelemetry 来标准化遥测数据的收集工作，并同时使用 SkyWalking 来进行数据的分析和可视化。
+
 
 ### 关键术语
 * OTLP: The OpenTelemetry Protocol (OTLP) specification describes the encoding, transport, and delivery mechanism of telemetry data between telemetry sources, intermediate nodes such as collectors and telemetry backends.
