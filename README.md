@@ -631,7 +631,7 @@ Redis官方提供的高可用方案分为Redis Sentinel和Redis Cluster两种。
 
 ![Redis哨兵](https://user-images.githubusercontent.com/6687462/159384118-9c7b5054-2dc0-4e72-93f3-efea36cbf0a0.png)
 
-** Redis Cluster **<br/>
+**Redis Cluster**<br/>
 Redis Cluster 提供了一种运行 Redis 的方法，其中数据 自动分片到多个 Redis 节点。Redis Cluster 还在分区期间提供了一定程度的可用性，即在某些节点发生故障或无法通信时继续操作的能力。但是，如果发生较大故障（例如，当大多数主服务器不可用时），集群将停止运行。
 
 Redis 集群 TCP 端口
